@@ -6,6 +6,6 @@
 
 void helpMessage();
 void invalidArgumentMessage();
-std::string getFileNameFromArg(int, char);
+void getFileNameFromArg(int, char);
 
 #endif

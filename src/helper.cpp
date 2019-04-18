@@ -12,7 +12,6 @@ void invalidArgumentMessage() {
 
 }
 
-std::string getFileNameFromArg(int argc, char **argv) {
+void getFileNameFromArg(int argc, char **argv) {
   std::cout << argc << " " << argv << std::endl;
-  return (std::string) argv;
 }
