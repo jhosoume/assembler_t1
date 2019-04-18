@@ -2,7 +2,7 @@
 
 int main(void) {
 
-    std::cout << "Assembler Started!" << std::endl;
+    cout << "Assembler Started!" << endl;
 
     return 0;
 }
