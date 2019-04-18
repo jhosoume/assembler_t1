@@ -1,8 +1,8 @@
 #include "assembler.hpp"
 
-int main(void) {
+int main(int argc, char **argv) {
 
-    cout << "Assembler Started!" << endl;
+    std::cout << "Assembler Started!" << std::endl;
 
     return 0;
 }
