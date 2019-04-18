@@ -1,0 +1,35 @@
+LABEL EQU 1 ; erro de definicao de equ que vai causar erro no if
+MACRO_LABEL: MACRO &A, &B
+	ADD &A
+	SUB &B
+ENDMACRO
+
+
+SECTION TEXT
+	IF LABEL ; essa label nao vai ser definida
+	COPY ZERO, OLDER
+	COPY ONE, OLD
+	MACRO_LABEL ZERO, UM ; simbolo UM nao definido
+	INPUT LIMIT
+	OUTPUT OLD
+FRONT:	LOAD OLDER
+	ADD OLD
+	STORE NEW
+	SUB LIMIT
+	JMPP FINAL + 2 ; ERRO
+	OUTPUT OLD + 1 
+	OUTPUT FRONT + 2 ; erro output com label da text
+	COPY OLD + 2, OLDER + 2 ; erro
+	COPY OLD + 1, OLDER + 1 ; funciona
+	COPY NEW, OLD
+	JMP FRONT
+FINAL:	OUTPUT LIMIT
+	;STOP 
+
+SECTION DATA
+ZERO:	CONST 0
+ONE:	CONST 1
+OLDER:	SPACE 2
+OLD:	SPACE 2
+NEW:	SPACE
+LIMIT:	SPACE
