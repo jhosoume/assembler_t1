@@ -1,10 +1,11 @@
 CC       := g++
-CFLAGS   := -std=c++11 --pedantic -g -Wall -O3 
-
-TARGET	 := bin/tradutor
+CFLAGS   := -std=c++11 --pedantic -g -Wall -O3
 
 SRCDIR   := src
 BUILDDIR := build
+BINDIR	 := bin
+
+TARGET	 := $(BINDIR)/tradutor
 
 SRCEXT   := cpp
 SOURCES  := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
@@ -14,18 +15,17 @@ INC      := -I include
 
 
 $(TARGET): $(OBJECTS)
+	@mkdir -p $(BINDIR)
 	@echo " Linking..."
 	@echo " $(CC) $^ -o $(TARGET) $(LIB)"; $(CC) $^ -o $(TARGET) $(LIB)
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
+	@echo " Building..."
 	@mkdir -p $(BUILDDIR)
 	@echo " $(CC) $(CFLAGS) $(INC) -c -o $@ $<"; $(CC) $(CFLAGS) $(INC) -c -o $@ $<
 
 clean:
-	@echo " Cleaning..."; 
-	@echo " $(RM) -r $(BUILDDIR) $(TARGET)"; $(RM) -r $(BUILDDIR) $(TARGET)
+	@echo " Cleaning...";
+	@echo " $(RM) -r $(BUILDDIR) $(TARGET)"; $(RM) -r $(BUILDDIR) $(TARGET) $(BINDIR)
 
 .PHONY: clean
-
-#clean:
-	#rm -f bin/* build/*.o
