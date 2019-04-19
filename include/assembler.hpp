@@ -2,5 +2,6 @@
 #define ASSEMBLER
 
 #include "helper.hpp"
+#include "PreProcessing.hpp"
 
 #endif
