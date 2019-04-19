@@ -17,5 +17,9 @@ private:
   File input_file;
 };
 
+using ::std::string;
+using ::std::cout;
+using ::std::endl;
+
 
 #endif

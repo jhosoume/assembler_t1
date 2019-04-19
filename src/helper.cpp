@@ -27,6 +27,18 @@ File::File(char *file) {
   }
 }
 
+string File::fullname() {
+  return (ext.empty() ? filename : (filename + '.' + ext));
+}
+
+string File::extension() {
+  return ext;
+}
+
+string File::name() {
+  return filename;
+}
+
 File getFileNameFromArg(int argc, char **argv) {
   // Check if number of inputs is correct, should have one argument
   if (argc < 2) {
