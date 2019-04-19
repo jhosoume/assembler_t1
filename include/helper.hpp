@@ -3,16 +3,23 @@
 
 #include <iostream>
 #include <string>
-#include <sstream>
 #include <cstring>
 
-struct file_t {
+using ::std::string;
+
+class File {
+public:
+  File(char *);
+  string fullname();
+  string extension();
+  string name();
+private:
   std::string filename;
-  std::string extension;
+  std::string ext;
 };
 
 void helpMessage();
 void invalidArgumentMessage();
-file_t getFileNameFromArg(int, char **);
+File getFileNameFromArg(int, char **);
 
 #endif
