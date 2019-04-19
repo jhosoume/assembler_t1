@@ -2,7 +2,7 @@
 
 int main(int argc, char **argv) {
 
-    std::cout << "Assembler Started!" << std::endl;
+  getFileNameFromArg(argc, argv);
 
-    return 0;
+  return 0;
 }
