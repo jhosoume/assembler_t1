@@ -6,6 +6,10 @@
 #include <fstream>
 #include "helper.hpp"
 
+using ::std::string;
+using ::std::cout;
+using ::std::endl;
+
 class PreProcessor {
 public:
   PreProcessor(File);
@@ -15,11 +19,9 @@ public:
 
 private:
   File input_file;
+  // Create space between tokens
+  string spaceTokens(string);
 };
-
-using ::std::string;
-using ::std::cout;
-using ::std::endl;
 
 
 #endif

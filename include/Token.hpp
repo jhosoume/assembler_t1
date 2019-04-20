@@ -25,7 +25,10 @@ class Token {
 public:
   Token(string);
   ~Token() {}
-  string
+  TOKEN_TYPE type;
+  string  value;
+
+  static TOKEN_TYPE classifyToken(string);
 };
 
 #endif
