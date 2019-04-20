@@ -19,7 +19,7 @@ enum class TOKEN_TYPE {
   MACRO_PARAMETER,
   ADD_SYMBOL,         // + sign, utilized for vectors
   EMPTY               // spaces or empty lines
-}
+};
 
 class Token {
 public:
