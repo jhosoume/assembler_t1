@@ -1,7 +1,7 @@
 #include "PreProcessing.hpp"
 
-PreProcessor::PreProcessor(File file)
-  : input_file{file}
+PreProcessor::PreProcessor(File file, Parser parser)
+  : input_file{file}, parser{parser}
   {
     // Create set of all special characters that need spacing
     validSpecialCharacters.insert(';');
@@ -18,7 +18,7 @@ void PreProcessor::exec() {
   }
   string line;
   string processed_line;
-  vector<string> tokens;
+  vector<Token> tokens;
 
   // Pre process each line individually
   while(std::getline(ifs, line)) {
@@ -37,6 +37,9 @@ void PreProcessor::exec() {
     cout << processed_line << endl;
     // Split line in tokens
     tokens = Parser::splitIntoTokens(processed_line);
+    // for (auto token : tokens) {
+      // cout << "Token value: " << token.tvalue << " " << static_cast<int>(token.type) << endl;
+    // }
   }
 }
 

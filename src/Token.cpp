@@ -1,7 +1,7 @@
 #include "Token.hpp"
 
-Token::Token(string value)
-  : value{value}, type{Parser::classifyToken(value)}, valid{isValid()}
+Token::Token(string value, TokenType type)
+  : tvalue{value}, type{type}, valid{isValid()}
   {}
 
 bool Token::isValid() {

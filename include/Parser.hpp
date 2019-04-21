@@ -3,13 +3,16 @@
 
 #include <string>
 #include <vector>
+#include <set>
+#include <algorithm>
 
 #include "helper.hpp"
-#include "Token.hpp"
 #include "TokenType.hpp"
+#include "Token.hpp"
 
 using ::std::string;
 using ::std::vector;
+using ::std::set;
 
 class Parser {
 public:
@@ -17,9 +20,13 @@ public:
   ~Parser() {}
 
   // Split into Different tokens
-  static vector<string> splitIntoTokens(string);
+  static vector<Token> splitIntoTokens(string);
   // Classify each token
   static TokenType classifyToken(string);
+private:
+  set<char> validCharacters;
+  set<char> validFirstCharacters;
+
 };
 
 #endif

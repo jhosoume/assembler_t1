@@ -4,16 +4,15 @@
 #include <string>
 
 #include "TokenType.hpp"
-#include "Parser.hpp"
 
 using ::std::string;
 
 
 class Token {
 public:
-  Token(string);
+  Token(string, TokenType);
   ~Token() {}
-  string  value;
+  string tvalue;
   TokenType type;
   bool valid;
 
