@@ -9,6 +9,10 @@ enum class TokenType {
   SYMBOL,             // Any name as variables (labels)
   LABEL_COLON,        // Colon that separates label from definition
   MACRO,              // Macro definition
+  ENDMACRO,              // Macro definition
+  SECTION,              // Macro definition
+  DATA_SECTION,              // Macro definition
+  TEXT_SECTION,              // Macro definition
   DIRECTIVE,
   INSTRUCTION,
   COMMENT_SEMICOLON,
