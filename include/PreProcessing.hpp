@@ -12,6 +12,7 @@
 
 #include "helper.hpp"
 #include "Program.hpp"
+#include "Parser.hpp"
 
 using ::std::string;
 using ::std::cout;
@@ -33,8 +34,6 @@ private:
   set<char> validSpecialCharacters;
   // Create space between tokens
   string spaceTokens(string);
-  // Split into Different tokens
-  vector<string> splitIntoTokens(string);
   // Remove lines with comments
   string removeComments(string);
 };

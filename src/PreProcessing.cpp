@@ -36,7 +36,7 @@ void PreProcessor::exec() {
     processed_line = spaceTokens(processed_line);
     cout << processed_line << endl;
     // Split line in tokens
-    tokens = splitIntoTokens(processed_line);
+    tokens = Parser::splitIntoTokens(processed_line);
   }
 }
 
@@ -52,12 +52,6 @@ string PreProcessor::spaceTokens(string line) {
     }
   }
   return new_line;
-}
-
-vector<string> PreProcessor::splitIntoTokens(string line) {
-  string delimiters = "\t   ";
-  vector<string> line_words = split(line, delimiters);
-  return line_words;
 }
 
 string PreProcessor::removeComments(string line) {
