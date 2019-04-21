@@ -8,6 +8,7 @@
 #include <list>
 #include <set>
 #include <vector>
+#include <cctype>
 
 #include "helper.hpp"
 #include "Program.hpp"
@@ -28,9 +29,14 @@ public:
 
 private:
   File input_file;
+  // Valid Characters that are used as tokens
+  set<char> validSpecialCharacters;
   // Create space between tokens
   string spaceTokens(string);
-  set<char> validSpecialCharacters;
+  // Split into Different tokens
+  vector<string> splitIntoTokens(string);
+  // Remove lines with comments
+  string removeComments(string);
 };
 
 

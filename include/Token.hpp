@@ -25,10 +25,13 @@ class Token {
 public:
   Token(string);
   ~Token() {}
-  TOKEN_TYPE type;
   string  value;
+  TOKEN_TYPE type;
+  bool valid;
 
-  static TOKEN_TYPE classifyToken(string);
+private:
+  TOKEN_TYPE classifyToken();
+  bool isValid();
 };
 
 #endif
