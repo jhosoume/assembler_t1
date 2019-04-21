@@ -4,8 +4,12 @@
 #include <iostream>
 #include <string>
 #include <cstring>
+#include <vector>
 
 using ::std::string;
+using ::std::vector;
+using ::std::cout;
+using ::std::endl;
 
 class File {
 public:
@@ -20,6 +24,7 @@ private:
 
 void helpMessage();
 void invalidArgumentMessage();
+vector<string> split(const string&, const string&);
 File getFileNameFromArg(int, char **);
 
 #endif

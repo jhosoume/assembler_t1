@@ -27,6 +27,18 @@ File::File(char *file) {
   }
 }
 
+string File::fullname() {
+  return (ext.empty() ? filename : (filename + '.' + ext));
+}
+
+string File::extension() {
+  return ext;
+}
+
+string File::name() {
+  return filename;
+}
+
 File getFileNameFromArg(int argc, char **argv) {
   // Check if number of inputs is correct, should have one argument
   if (argc < 2) {
@@ -40,4 +52,23 @@ File getFileNameFromArg(int argc, char **argv) {
   }
   File file = File(argv[1]);
   return file;
+}
+
+vector<string> split(const string& str, const string& delim) {
+  vector<string> parts;
+  size_t start, end = 0;
+  while (end < str.size()) {
+    start = end;
+    while (start < str.size() && (delim.find(str[start]) != string::npos)) {
+      ++start;  // skip initial whitespace
+    }
+    end = start;
+    while (end < str.size() && (delim.find(str[end]) == string::npos)) {
+      ++end; // skip to end of word
+    }
+    if (end - start != 0) {  // just ignore zero-length strings.
+      parts.push_back(string(str, start, end - start));
+    }
+  }
+  return parts;
 }
