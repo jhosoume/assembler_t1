@@ -17,15 +17,20 @@ using ::std::set;
 class Parser {
 public:
   Parser();
-  ~Parser() {}
-
   // Split into Different tokens
-  static vector<Token> splitIntoTokens(string);
+  vector<Token> splitIntoTokens(string);
   // Classify each token
-  static TokenType classifyToken(string);
+  TokenType classifyToken(string);
+  bool isTokenValid(string);
+
 private:
+  bool checkValidNumberOfChars(string);
+  bool checkIfSymbolStartsCorrectly(string);
+  bool checkIfAllCharactersAreValid(string);
+
   set<char> validCharacters;
   set<char> validFirstCharacters;
+
 
 };
 

@@ -6,33 +6,33 @@
 
 SECTION TEXT
     ; Initialise vector
-    INPUT V[0]
-    INPUT V[1]
-    INPUT V[2]
-    INPUT V[3]
+    INPU*T V + 0
+    INPUT V + 1
+    INPUT V + 2
+    INPUT V + 3
     
     ; Multiply each element by 3
-    LOAD V[0]
+    LOAD V + 0
     MULT THREE
-    STORE V[0]
+    STORE V + 0
     
-    LOAD V[1]
+    LOAD V + 1
     MULT THREE
-    STORE V[1]
+    STORE V + 1
     
-    LOAD V[2]
+    LOAD V + 2
     MULT THREE
-    STORE V[2]
+    STORE V + 2
     
-    LOAD V[3]
+    LOAD V + 3
     MULT THREE
-    STORE V[3]
+    STORE V + 3
     
     ; Print vector
-    OUTPUT V[0]
-    OUTPUT V[1]
-    OUTPUT V[2]
-    OUTPUT V[3]
+    OUTPUT V + 0
+    OUTPUT V + 1
+    OUTPUT V + 2
+    OUTPUT V + 3
     
     ; Exit
     STOP

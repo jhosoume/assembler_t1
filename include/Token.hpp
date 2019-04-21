@@ -10,14 +10,11 @@ using ::std::string;
 
 class Token {
 public:
-  Token(string, TokenType);
+  Token(string, TokenType, bool);
   ~Token() {}
   string tvalue;
   TokenType type;
   bool valid;
-
-private:
-  bool isValid();
 };
 
 #endif

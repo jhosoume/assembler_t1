@@ -1,9 +1,5 @@
 #include "Token.hpp"
 
-Token::Token(string value, TokenType type)
-  : tvalue{value}, type{type}, valid{isValid()}
+Token::Token(string value, TokenType type, bool valid)
+  : tvalue{value}, type{type}, valid{valid}
   {}
-
-bool Token::isValid() {
-  return true;
-}

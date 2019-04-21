@@ -35,8 +35,8 @@ void PreProcessor::exec() {
     // Add space between tokens to make process of separation easier
     processed_line = spaceTokens(processed_line);
     cout << processed_line << endl;
-    // Split line in tokens
-    tokens = Parser::splitIntoTokens(processed_line);
+    // Split line in tokens and get them all in uppercase
+    tokens = parser.splitIntoTokens(processed_line);
     for (auto token : tokens) {
       cout << "Token value: " << token.tvalue << " " << TokenTypeToString(token.type) << endl;
     }
