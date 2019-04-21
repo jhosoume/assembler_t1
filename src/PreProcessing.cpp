@@ -37,12 +37,14 @@ void PreProcessor::exec() {
     cout << processed_line << endl;
     // Split line in tokens
     tokens = Parser::splitIntoTokens(processed_line);
-    // for (auto token : tokens) {
-      // cout << "Token value: " << token.tvalue << " " << static_cast<int>(token.type) << endl;
-    // }
+    for (auto token : tokens) {
+      cout << "Token value: " << token.tvalue << " " << TokenTypeToString(token.type) << endl;
+    }
   }
 }
 
+// Creates separation of special characters from the rest of tokens to
+// make split easier
 string PreProcessor::spaceTokens(string line) {
   string new_line;
   for (char const &character : line) {
@@ -57,6 +59,7 @@ string PreProcessor::spaceTokens(string line) {
   return new_line;
 }
 
+// Remove comments from the rest of the line
 string PreProcessor::removeComments(string line) {
   return line.substr(0, line.find(";"));
 }

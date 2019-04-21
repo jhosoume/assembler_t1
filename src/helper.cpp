@@ -39,6 +39,7 @@ string File::name() {
   return filename;
 }
 
+// Returns a File type that has the filename and its extension
 File getFileNameFromArg(int argc, char **argv) {
   // Check if number of inputs is correct, should have one argument
   if (argc < 2) {
@@ -54,6 +55,7 @@ File getFileNameFromArg(int argc, char **argv) {
   return file;
 }
 
+// Split string into tokens according to delimiters
 vector<string> split(const string& str, const string& delim) {
   vector<string> parts;
   size_t start, end = 0;
@@ -71,4 +73,59 @@ vector<string> split(const string& str, const string& delim) {
     }
   }
   return parts;
+}
+
+// Verify if the string is a valid hex (positive or negative)
+bool is_hex_notation(const string &s) {
+  return ((s.size() > 2 &&
+          s.compare(0, 2, "0x") == 0 &&
+          s.find_first_not_of("0123456789abcdefABCDEF", 2) == string::npos)
+      ||(s.size() > 3 &&
+        s.compare(0, 3, "-0x") == 0 &&
+        s.find_first_not_of("0123456789abcdefABCDEF", 3) == string::npos));
+}
+
+// Helper function to aux the verification of token types
+string TokenTypeToString(const TokenType &type) {
+  switch(type) {
+    case TokenType::INVALID :
+      return "INVALID";
+      break;
+    case TokenType::NUMBER_DECIMAL :
+      return "NUMBER_DECIMAL";
+      break;
+    case TokenType::NUMBER_HEX :
+      return "NUMBER_HEX";
+      break;
+    case TokenType::SYMBOL :
+      return "SYMBOL";
+      break;
+    case TokenType::LABEL_COLON :
+      return "LABEL_COLON";
+      break;
+    case TokenType::MACRO :
+      return "MACRO";
+      break;
+    case TokenType::DIRECTIVE :
+      return "DIRECTIVE";
+      break;
+    case TokenType::INSTRUCTION :
+      return "INSTRUCTION";
+      break;
+    case TokenType::COMMENT_SEMICOLON:
+      return "COMMENT_SEMICOLON";
+      break;
+    case TokenType::COMMA_ARG_SEPARATOR:
+      return "COMMA_ARG_SEPARATOR";
+      break;
+    case TokenType::MACRO_PARAMETER:
+      return "MACRO_PARAMETER";
+      break;
+    case TokenType::ADD_SYMBOL:
+      return "ADD_SYMBOL";
+      break;
+    default:
+      return "UNKNOWN_TYPE";
+      break;
+  }
 }
