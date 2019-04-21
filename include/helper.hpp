@@ -6,6 +6,8 @@
 #include <cstring>
 #include <vector>
 
+#include "TokenType.hpp"
+
 using ::std::string;
 using ::std::vector;
 using ::std::cout;
@@ -27,5 +29,6 @@ void invalidArgumentMessage();
 vector<string> split(const string&, const string&);
 File getFileNameFromArg(int, char **);
 bool is_hex_notation(const string &);
+string TokenTypeToString(const TokenType &);
 
 #endif
