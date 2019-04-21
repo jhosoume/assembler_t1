@@ -26,5 +26,6 @@ void helpMessage();
 void invalidArgumentMessage();
 vector<string> split(const string&, const string&);
 File getFileNameFromArg(int, char **);
+bool is_hex_notation(const string &);
 
 #endif

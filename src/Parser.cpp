@@ -17,6 +17,8 @@ Parser::Parser() {
   }
 }
 
+// Receives a line and separates it into tokens, returning a vector of all
+// the tokens in the line, classiying them and checking if they are valid
 vector<Token> Parser::splitIntoTokens(string line) {
   string delimiters = "\t   ";
   vector<Token> tokens;
@@ -27,6 +29,33 @@ vector<Token> Parser::splitIntoTokens(string line) {
   }
   return tokens;
 }
-TokenType Parser::classifyToken(string) {
+
+
+TokenType Parser::classifyToken(string token) {
+  if (token.compare("") == 0) {
+      return TokenType::EMPTY;
+  } else if (token.compare(" ") == 0) {
+      return TokenType::EMPTY;
+  } else if (token.compare("\t") == 0) {
+      return TokenType::EMPTY;
+  } else if (token.compare("\n") == 0) {
+      return TokenType::EMPTY;
+  } else if (token.compare(" ") == 0) {
+      return TokenType::EMPTY;
+  } else if (token.compare(" ") == 0) {
+      return TokenType::EMPTY;
+  } else if (token.compare(";") == 0) {
+      return TokenType::COMMENT_SEMICOLON;
+  } else if (token.compare(":") == 0) {
+      return TokenType::LABEL_COLON;
+  } else if (token.compare("MACRO") == 0) {
+      return TokenType::MACRO;
+  } else if (token.compare(",") == 0) {
+      return TokenType::COMMA_ARG_SEPARATOR;
+  } else if (token.at(0) == '&') {
+      return TokenType::MACRO_PARAMETER;
+  } else if (token.compare("+") == 0) {
+      return TokenType::ADD_SYMBOL;
+  }
   return TokenType::SYMBOL;
 }
