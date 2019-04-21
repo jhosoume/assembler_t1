@@ -3,6 +3,7 @@
 PreProcessor::PreProcessor(File file)
   : input_file{file}
   {
+    // Create set of all special characters that need spacing
     validSpecialCharacters.insert(';');
     validSpecialCharacters.insert('+');
     validSpecialCharacters.insert(':');
@@ -19,16 +20,22 @@ void PreProcessor::exec() {
   string processed_line;
   vector<string> tokens;
 
+  // Pre process each line individually
   while(std::getline(ifs, line)) {
+    // Call function to remove all comentaries (all chars after ;)
     processed_line = removeComments(line);
+    // Check if line is empty (all white spaces)
     if (processed_line.empty() ||
       std::all_of(processed_line.begin(), processed_line.end(),
         [](char c){
           return std::isspace(static_cast<unsigned char>(c));
-      }))
+      })) {
       continue;
+    }
+    // Add space between tokens to make process of separation easier
     processed_line = spaceTokens(processed_line);
     cout << processed_line << endl;
+    // Split line in tokens
     tokens = splitIntoTokens(processed_line);
   }
 }
@@ -54,8 +61,5 @@ vector<string> PreProcessor::splitIntoTokens(string line) {
 }
 
 string PreProcessor::removeComments(string line) {
-  string new_line;
-  for (char const &character : line) {
-  }
-  return new_line;
+  return line.substr(0, line.find(";"));
 }

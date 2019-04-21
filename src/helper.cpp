@@ -54,7 +54,6 @@ File getFileNameFromArg(int argc, char **argv) {
   return file;
 }
 
-
 vector<string> split(const string& str, const string& delim) {
   vector<string> parts;
   size_t start, end = 0;
