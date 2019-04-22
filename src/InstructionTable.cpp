@@ -1,9 +1,8 @@
 #include "InstructionTable.hpp"
 
 InstructionTable::InstructionTable() {
-  instructions.insert( pair<string, Instruction>( "ADD",
-                                                  Instruction("ADD", 1, 1, 2) ) );
   vector<TokenType> signature;
+  instructions.insert( pair<string, Instruction>( "ADD", Instruction("ADD", 1, 1, 2) ) );
   signature.push_back(TokenType::INSTRUCTION_TOKEN);
   signature.push_back(TokenType::SYMBOL);
   instructions.at("ADD").signatures.push_back(signature);
@@ -13,9 +12,132 @@ InstructionTable::InstructionTable() {
   signature.push_back(TokenType::ADD_SYMBOL);
   signature.push_back(TokenType::NUMBER_DECIMAL);
   instructions.at("ADD").signatures.push_back(signature);
-  instructions.insert( pair<string, Instruction>( "SUB",
-                                                  Instruction("SUB", 1, 1, 2) ) );
+  signature.clear();
+
+  instructions.insert( pair<string, Instruction>( "SUB", Instruction("SUB", 1, 2, 2) ) );
+  signature.push_back(TokenType::INSTRUCTION_TOKEN);
+  signature.push_back(TokenType::SYMBOL);
+  instructions.at("SUB").signatures.push_back(signature);
+  signature.clear();
+  signature.push_back(TokenType::INSTRUCTION_TOKEN);
+  signature.push_back(TokenType::SYMBOL);
+  signature.push_back(TokenType::ADD_SYMBOL);
+  signature.push_back(TokenType::NUMBER_DECIMAL);
+  instructions.at("SUB").signatures.push_back(signature);
+  signature.clear();
+
+  instructions.insert( pair<string, Instruction>( "MULT", Instruction("MULT", 1, 3, 2) ) );
+  signature.push_back(TokenType::INSTRUCTION_TOKEN);
+  signature.push_back(TokenType::SYMBOL);
+  instructions.at("MULT").signatures.push_back(signature);
+  signature.clear();
+  signature.push_back(TokenType::INSTRUCTION_TOKEN);
+  signature.push_back(TokenType::SYMBOL);
+  signature.push_back(TokenType::ADD_SYMBOL);
+  signature.push_back(TokenType::NUMBER_DECIMAL);
+  instructions.at("MULT").signatures.push_back(signature);
+  signature.clear();
+
+  instructions.insert( pair<string, Instruction>( "DIV", Instruction("DIV", 1, 4, 2) ) );
+  signature.push_back(TokenType::INSTRUCTION_TOKEN);
+  signature.push_back(TokenType::SYMBOL);
+  instructions.at("DIV").signatures.push_back(signature);
+  signature.clear();
+  signature.push_back(TokenType::INSTRUCTION_TOKEN);
+  signature.push_back(TokenType::SYMBOL);
+  signature.push_back(TokenType::ADD_SYMBOL);
+  signature.push_back(TokenType::NUMBER_DECIMAL);
+  instructions.at("DIV").signatures.push_back(signature);
+  signature.clear();
+
+  instructions.insert( pair<string, Instruction>( "JMP", Instruction("JMP", 1, 5, 2) ) );
+  signature.push_back(TokenType::INSTRUCTION_TOKEN);
+  signature.push_back(TokenType::SYMBOL);
+  instructions.at("JMP").signatures.push_back(signature);
+  signature.clear();
+
+  instructions.insert( pair<string, Instruction>( "JMPN", Instruction("JMPN", 1, 6, 2) ) );
+  signature.push_back(TokenType::INSTRUCTION_TOKEN);
+  signature.push_back(TokenType::SYMBOL);
+  instructions.at("JMPN").signatures.push_back(signature);
+  signature.clear();
+
+  instructions.insert( pair<string, Instruction>( "JMPP", Instruction("JMPP", 1, 7, 2) ) );
+  signature.push_back(TokenType::INSTRUCTION_TOKEN);
+  signature.push_back(TokenType::SYMBOL);
+  instructions.at("JMPP").signatures.push_back(signature);
+  signature.clear();
+
+  instructions.insert( pair<string, Instruction>( "JMPZ", Instruction("JMPZ", 1, 8, 2) ) );
+  signature.push_back(TokenType::INSTRUCTION_TOKEN);
+  signature.push_back(TokenType::SYMBOL);
+  instructions.at("JMPZ").signatures.push_back(signature);
+  signature.clear();
+
+  instructions.insert( pair<string, Instruction>( "COPY", Instruction("COPY", 2, 9, 3) ) );
+  signature.push_back(TokenType::INSTRUCTION_TOKEN); //CASO 1
+  signature.push_back(TokenType::SYMBOL);
+  signature.push_back(TokenType::COMMA_ARG_SEPARATOR);
+  signature.push_back(TokenType::SYMBOL);
+  instructions.at("COPY").signatures.push_back(signature);
+  signature.clear();
+  signature.push_back(TokenType::INSTRUCTION_TOKEN);//CASO 2
+  signature.push_back(TokenType::SYMBOL);
+  signature.push_back(TokenType::COMMA_ARG_SEPARATOR);
+  signature.push_back(TokenType::SYMBOL);
+  signature.push_back(TokenType::ADD_SYMBOL);
+  signature.push_back(TokenType::NUMBER_DECIMAL);
+  instructions.at("COPY").signatures.push_back(signature);
+  signature.clear();
+  signature.push_back(TokenType::INSTRUCTION_TOKEN);//CASO 3
+  signature.push_back(TokenType::SYMBOL);
+  signature.push_back(TokenType::ADD_SYMBOL);
+  signature.push_back(TokenType::NUMBER_DECIMAL);
+  signature.push_back(TokenType::COMMA_ARG_SEPARATOR);
+  signature.push_back(TokenType::SYMBOL);
+  instructions.at("COPY").signatures.push_back(signature);
+  signature.clear();
+  signature.push_back(TokenType::INSTRUCTION_TOKEN);//CASO 4
+  signature.push_back(TokenType::SYMBOL);
+  signature.push_back(TokenType::ADD_SYMBOL);
+  signature.push_back(TokenType::NUMBER_DECIMAL);
+  signature.push_back(TokenType::COMMA_ARG_SEPARATOR);
+  signature.push_back(TokenType::SYMBOL);
+  signature.push_back(TokenType::ADD_SYMBOL);
+  signature.push_back(TokenType::NUMBER_DECIMAL);
+  instructions.at("COPY").signatures.push_back(signature);
+  signature.clear();
+
+  instructions.insert( pair<string, Instruction>( "LOAD", Instruction("LOAD", 1, 10, 2) ) );
+  signature.push_back(TokenType::INSTRUCTION_TOKEN);
+  signature.push_back(TokenType::SYMBOL);
+  instructions.at("LOAD").signatures.push_back(signature);
+  signature.clear();
+
+  instructions.insert( pair<string, Instruction>( "STORE", Instruction("STORE", 1, 11, 2) ) );
+  signature.push_back(TokenType::INSTRUCTION_TOKEN);
+  signature.push_back(TokenType::SYMBOL);
+  instructions.at("STORE").signatures.push_back(signature);
+  signature.clear();
+
+  instructions.insert( pair<string, Instruction>( "INPUT", Instruction("INPUT", 1, 12, 2) ) );
+  signature.push_back(TokenType::INSTRUCTION_TOKEN);
+  signature.push_back(TokenType::SYMBOL);
+  instructions.at("INPUT").signatures.push_back(signature);
+  signature.clear();
+
+  instructions.insert( pair<string, Instruction>( "OUTPUT", Instruction("OUTPUT", 1, 13, 2) ) );
+  signature.push_back(TokenType::INSTRUCTION_TOKEN);
+  signature.push_back(TokenType::SYMBOL);
+  instructions.at("OUTPUT").signatures.push_back(signature);
+  signature.clear();
+
+  instructions.insert( pair<string, Instruction>( "STOP", Instruction("STOP", 0, 14, 1) ) );
+  signature.push_back(TokenType::INSTRUCTION_TOKEN);
+  instructions.at("STOP").signatures.push_back(signature);
+  signature.clear();
 }
+
 
 // Print all possible signtures of all instructions
 void InstructionTable::printInstructions() {
