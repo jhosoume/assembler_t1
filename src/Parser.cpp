@@ -32,12 +32,14 @@ vector<Token> Parser::splitIntoTokens(string line) {
   return tokens;
 }
 
+// Function that groups up
 bool Parser::isTokenValid(string token) {
   return checkValidNumberOfChars(token) &
          checkIfAllCharactersAreValid(token) &
          checkIfSymbolStartsCorrectly(token);
 }
 
+// Classification of token accordingly to its content
 TokenType Parser::classifyToken(string token) {
   if (token.compare("") == 0) {
       return TokenType::EMPTY;
@@ -53,14 +55,22 @@ TokenType Parser::classifyToken(string token) {
       return TokenType::COMMENT_SEMICOLON;
   } else if (token.compare(":") == 0) {
       return TokenType::LABEL_COLON;
+  } else if (token.compare("+") == 0) {
+      return TokenType::ADD_SYMBOL;
+  } else if (token.compare("SECTION") == 0) {
+      return TokenType::SECTION;
+  } else if (token.compare("DATA") == 0) {
+      return TokenType::DATA_SECTION;
+  } else if (token.compare("TEXT") == 0) {
+      return TokenType::TEXT_SECTION;
   } else if (token.compare("MACRO") == 0) {
       return TokenType::MACRO;
+  } else if (token.compare("ENDMACRO") == 0) {
+      return TokenType::ENDMACRO;
   } else if (token.compare(",") == 0) {
       return TokenType::COMMA_ARG_SEPARATOR;
   } else if (token.at(0) == '&') {
       return TokenType::MACRO_PARAMETER;
-  } else if (token.compare("+") == 0) {
-      return TokenType::ADD_SYMBOL;
   }
   return TokenType::SYMBOL;
 }

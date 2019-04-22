@@ -8,7 +8,6 @@ using ::std::string;
 class SymbolTable {
 public:
   SymbolTable();
-  ~SymbolTable() {}
 };
 
 #endif

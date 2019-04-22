@@ -15,7 +15,6 @@ using ::std::vector;
 class Program {
 public:
   Program();
-  ~Program() {}
 
   int num_lines;
   std::vector< std::vector<Token> > tokens;

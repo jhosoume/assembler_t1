@@ -106,10 +106,10 @@ string TokenTypeToString(const TokenType &type) {
     case TokenType::MACRO :
       return "MACRO";
       break;
-    case TokenType::DIRECTIVE :
+    case TokenType::DIRECTIVE_TOKEN :
       return "DIRECTIVE";
       break;
-    case TokenType::INSTRUCTION :
+    case TokenType::INSTRUCTION_TOKEN :
       return "INSTRUCTION";
       break;
     case TokenType::COMMENT_SEMICOLON:
@@ -120,6 +120,18 @@ string TokenTypeToString(const TokenType &type) {
       break;
     case TokenType::MACRO_PARAMETER:
       return "MACRO_PARAMETER";
+      break;
+    case TokenType::ENDMACRO:
+      return "ENDMACRO";
+      break;
+    case TokenType::SECTION:
+      return "SECTION";
+      break;
+    case TokenType::DATA_SECTION:
+      return "DATA_SECTION";
+      break;
+    case TokenType::TEXT_SECTION:
+      return "TEXT_SECTION";
       break;
     case TokenType::ADD_SYMBOL:
       return "ADD_SYMBOL";
