@@ -28,7 +28,7 @@ DirectiveTable::DirectiveTable() {
 
   directives.insert( pair<string, Directive>( "SPACE", Directive("SPACE", 1) ) );
   signature.push_back(TokenType::DIRECTIVE_TOKEN);
-  signature.push_back(TokenType::EMPTY);
+  //signature.push_back(TokenType::EMPTY);
   directives.at("SPACE").signatures.push_back(signature);
   signature.clear();
   signature.push_back(TokenType::DIRECTIVE_TOKEN);
