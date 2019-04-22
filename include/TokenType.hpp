@@ -13,8 +13,8 @@ enum class TokenType {
   SECTION,              // Macro definition
   DATA_SECTION,              // Macro definition
   TEXT_SECTION,              // Macro definition
-  DIRECTIVE,
-  INSTRUCTION,
+  DIRECTIVE_TOKEN,
+  INSTRUCTION_TOKEN,
   COMMENT_SEMICOLON,
   COMMA_ARG_SEPARATOR,
   MACRO_PARAMETER,
