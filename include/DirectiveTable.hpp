@@ -18,7 +18,6 @@ public:
   DirectiveTable();
   void printDirectives();
 
-private:
   map<string, Directive> directives;
 
 };

@@ -5,10 +5,13 @@
 #include <vector>
 #include <set>
 #include <algorithm>
+#include <cctype>
 
 #include "helper.hpp"
 #include "TokenType.hpp"
 #include "Token.hpp"
+#include "InstructionTable.hpp"
+#include "DirectiveTable.hpp"
 
 using ::std::string;
 using ::std::vector;
@@ -16,7 +19,7 @@ using ::std::set;
 
 class Parser {
 public:
-  Parser();
+  Parser(InstructionTable, DirectiveTable);
   // Split into Different tokens
   vector<Token> splitIntoTokens(string);
   // Classify each token
@@ -24,9 +27,14 @@ public:
   bool isTokenValid(string);
 
 private:
-  bool checkValidNumberOfChars(string);
-  bool checkIfSymbolStartsCorrectly(string);
-  bool checkIfAllCharactersAreValid(string);
+  bool checkValidNumberOfChars(const string &);
+  bool checkIfSymbolStartsCorrectly(const string &);
+  bool checkIfAllCharactersAreValid(const string &);
+  bool checkIfHexNumber(const string &);
+  bool checkIfDecNumber(const string &);
+
+  InstructionTable instruction_table;
+  DirectiveTable directive_table;
 
   set<char> validCharacters;
   set<char> validFirstCharacters;

@@ -1,6 +1,8 @@
 #include "Parser.hpp"
 
-Parser::Parser() {
+Parser::Parser(InstructionTable instructions, DirectiveTable directives)
+  : instruction_table{instructions}, directive_table{directives}
+{
   const string tmp_letters = "ABCDEFGHIJKLMNOPQRSTUVXWYZ";
   const string tmp_numbers = "0123456789";
   const string tmp_specials = "_";
@@ -71,20 +73,42 @@ TokenType Parser::classifyToken(string token) {
       return TokenType::COMMA_ARG_SEPARATOR;
   } else if (token.at(0) == '&') {
       return TokenType::MACRO_PARAMETER;
+  } else if (instruction_table.instructions.count(token) > 0) {
+      return TokenType::INSTRUCTION_TOKEN;
+  } else if (directive_table.directives.count(token) > 0) {
+      return TokenType::DIRECTIVE_TOKEN;
+  } else if(checkIfDecNumber(token)) {
+      return TokenType::NUMBER_DECIMAL;
+  } else if(checkIfHexNumber(token)) {
+      return TokenType::NUMBER_HEX;
+  } else if (!isTokenValid(token)) {
+      return TokenType::INVALID;
   }
   return TokenType::SYMBOL;
 }
 
-bool Parser::checkValidNumberOfChars(string token) {
+bool Parser::checkValidNumberOfChars(const string &token) {
   return token.size() <= 50;
 }
 
-bool Parser::checkIfSymbolStartsCorrectly(string token) {
+bool Parser::checkIfSymbolStartsCorrectly(const string &token) {
   const char firstChar = token.at(0);
   return (validFirstCharacters.find(firstChar) != validFirstCharacters.end());
 }
 
-bool Parser::checkIfAllCharactersAreValid(string token) {
-  //TODO
-  return true;
+bool Parser::checkIfAllCharactersAreValid(const string &token) {
+  bool valid = true;
+  for (const char &character : token) {
+    valid = valid && (validCharacters.find(character) != validCharacters.end());
+  }
+  return valid;
+}
+
+bool Parser::checkIfDecNumber(const string &token) {
+  return is_integer_notation(token);
+}
+
+//TODO Needs to add negative numbers
+bool Parser::checkIfHexNumber(const string &token) {
+  return is_hex_notation(token);
 }

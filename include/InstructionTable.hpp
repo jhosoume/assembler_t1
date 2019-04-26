@@ -18,7 +18,6 @@ public:
   InstructionTable();
   void printInstructions();
 
-private:
   map<string, Instruction> instructions;
 
 };

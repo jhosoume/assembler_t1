@@ -85,6 +85,17 @@ bool is_hex_notation(const string &s) {
         s.find_first_not_of("0123456789abcdefABCDEF", 3) == string::npos));
 }
 
+bool is_integer_notation(const string &s) {
+  string tmp_s = s;
+  if (tmp_s.at(0) == '-')
+    tmp_s.erase(0, 1);
+  return std::find_if(tmp_s.begin(), tmp_s.end(),
+    [](const char &character) {
+        return !std::isdigit(character);
+    }) == tmp_s.end();
+
+}
+
 // Helper function to aux the verification of token types
 string TokenTypeToString(const TokenType &type) {
   switch(type) {
