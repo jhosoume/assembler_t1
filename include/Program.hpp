@@ -7,6 +7,7 @@
 
 #include "Token.hpp"
 #include "SymbolTable.hpp"
+#include "helper.hpp"
 
 using ::std::string;
 using ::std::map;
@@ -15,7 +16,9 @@ using ::std::vector;
 class Program {
 public:
   Program();
-  Program(int, vector< vector <Token> >);
+
+  void showTokenswithType();
+  void showTokens();
 
   int num_lines;
   std::vector< std::vector<Token> > tokens;

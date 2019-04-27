@@ -1,9 +1,9 @@
 #include "PreProcessing.hpp"
 
-PreProcessor::PreProcessor(File file, Parser parser)
-  : input_file{file}, parser{parser}
+PreProcessor::PreProcessor(const File &file, const Parser &parser, Program &prog)
+  : input_file{file}, parser{parser}, program{prog}
   {
-    // Create set of all special characters that need spacing
+    // Create set of all special characters that need spacing for token identification
     validSpecialCharacters.insert(';');
     validSpecialCharacters.insert('+');
     validSpecialCharacters.insert(':');
@@ -19,7 +19,9 @@ void PreProcessor::exec() {
   string line;
   string processed_line;
   vector<Token> tokens;
+  bool needs_concate = false;
 
+  int program_size = 0;
   // Pre process each line individually
   while(std::getline(ifs, line)) {
     // Call function to remove all comentaries (all chars after ;)
@@ -34,11 +36,16 @@ void PreProcessor::exec() {
     }
     // Add space between tokens to make process of separation easier
     processed_line = spaceTokens(processed_line);
-    cout << processed_line << endl;
     // Split line in tokens and get them all in uppercase
     tokens = parser.splitIntoTokens(processed_line);
-    for (auto token : tokens) {
-      cout << "Token value: " << token.tvalue << " " << TokenTypeToString(token.type) << endl;
+    if (needs_concate) {
+      program.tokens.back().insert(program.tokens.back().end(), tokens.begin(), tokens.end());
+      needs_concate = false;
+    } else {
+      program.tokens.push_back(tokens);
+    }
+    if (tokens.back().type == TokenType::LABEL_COLON) {
+      needs_concate = true;
     }
   }
 }

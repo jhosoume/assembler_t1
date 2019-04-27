@@ -23,14 +23,14 @@ using ::std::set;
 
 class PreProcessor {
 public:
-  PreProcessor(File, Parser);
+  PreProcessor(const File &, const Parser &, Program &);
   void exec();
-
-  ~PreProcessor() {}
 
 private:
   File input_file;
   Parser parser;
+  Program &program;
+  // Show program
   // Valid Characters that are used as tokens
   set<char> validSpecialCharacters;
   // Create space between tokens
