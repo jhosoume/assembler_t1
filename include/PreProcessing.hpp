@@ -25,6 +25,7 @@ class PreProcessor {
 public:
   PreProcessor(const File &, const Parser &, Program &);
   void exec();
+  void writePreProcessedFile();
 
 private:
   File input_file;

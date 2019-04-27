@@ -12,5 +12,6 @@ int main(int argc, char **argv) {
   // directive_table.printDirectives();
   zero_run.exec();
   prog.showTokens();
+  zero_run.writePreProcessedFile();
   return 0;
 }
