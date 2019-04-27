@@ -1,7 +1,7 @@
 #include "PreProcessing.hpp"
 
-PreProcessor::PreProcessor(const File &file, const Parser &parser, Program &prog)
-  : input_file{file}, parser{parser}, program{prog}
+PreProcessor::PreProcessor(const File &file, const Scanner &scanner, Program &prog)
+  : input_file{file}, scanner{scanner}, program{prog}
   {
     // Create set of all special characters that need spacing for token identification
     validSpecialCharacters.insert(';');
@@ -38,7 +38,7 @@ void PreProcessor::exec() {
     // Add space between tokens to make process of separation easier
     processed_line = spaceTokens(processed_line);
     // Split line in tokens and get them all in uppercase
-    tokens = parser.splitIntoTokens(processed_line);
+    tokens = scanner.splitIntoTokens(processed_line);
     // Check if last line parsed was just a label
     if (needs_concate) {
       // Concatenates with the last line

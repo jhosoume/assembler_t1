@@ -12,7 +12,7 @@
 
 #include "helper.hpp"
 #include "Program.hpp"
-#include "Parser.hpp"
+#include "Scanner.hpp"
 
 using ::std::string;
 using ::std::cout;
@@ -23,13 +23,13 @@ using ::std::set;
 
 class PreProcessor {
 public:
-  PreProcessor(const File &, const Parser &, Program &);
+  PreProcessor(const File &, const Scanner &, Program &);
   void exec();
   void writePreProcessedFile();
 
 private:
   File input_file;
-  Parser parser;
+  Scanner scanner;
   Program &program;
   // Show program
   // Valid Characters that are used as tokens

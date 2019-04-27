@@ -15,6 +15,8 @@ public:
   string tvalue;
   TokenType type;
   bool valid;
+
+  bool operator ==(const Token &);
 };
 
 #endif

@@ -4,14 +4,17 @@ int main(int argc, char **argv) {
   Program prog = Program();
   InstructionTable instruction_table = InstructionTable();
   DirectiveTable directive_table = DirectiveTable();
+  Scanner scanner = Scanner(instruction_table, directive_table);
   Parser parser = Parser(instruction_table, directive_table);
   // Get file to be assembled
   File input_file = getFileNameFromArg(argc, argv);
-  PreProcessor zero_run = PreProcessor(input_file, parser, prog);
+  PreProcessor zero_run = PreProcessor(input_file, scanner, prog);
   // instruction_table.printInstructions();
   // directive_table.printDirectives();
   zero_run.exec();
-  prog.showTokens();
+  // prog.showTokens();
   zero_run.writePreProcessedFile();
+  FirstPass first_pass = FirstPass(parser, prog);
+  first_pass.exec();
   return 0;
 }

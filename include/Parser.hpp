@@ -12,6 +12,7 @@
 #include "Token.hpp"
 #include "InstructionTable.hpp"
 #include "DirectiveTable.hpp"
+#include "Program.hpp"
 
 using ::std::string;
 using ::std::vector;
@@ -19,26 +20,12 @@ using ::std::set;
 
 class Parser {
 public:
-  Parser(InstructionTable, DirectiveTable);
-  // Split into Different tokens
-  vector<Token> splitIntoTokens(string);
-  // Classify each token
-  TokenType classifyToken(string);
-  bool isTokenValid(string);
+  Parser(const InstructionTable &, const DirectiveTable &);
+  bool isExpressionValid(const vector <Token> &);
 
 private:
-  bool checkValidNumberOfChars(const string &);
-  bool checkIfSymbolStartsCorrectly(const string &);
-  bool checkIfAllCharactersAreValid(const string &);
-  bool checkIfHexNumber(const string &);
-  bool checkIfDecNumber(const string &);
-
   InstructionTable instruction_table;
   DirectiveTable directive_table;
-
-  set<char> validCharacters;
-  set<char> validFirstCharacters;
-
 
 };
 
