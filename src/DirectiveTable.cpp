@@ -49,6 +49,7 @@ DirectiveTable::DirectiveTable() {
 
   // EQU _________________________________________________________
   directives.insert( pair<string, Directive>( "EQU", Directive("EQU", 1, 0) ) );
+  preprocess_dirs.insert( pair<string, Directive>( "EQU", Directive("EQU", 1, 0) ) );
   signature.push_back(TokenType::DIRECTIVE_TOKEN);
   signature.push_back(TokenType::NUMBER_DECIMAL);
   directives.at("EQU").signatures.push_back(signature);
@@ -64,6 +65,7 @@ DirectiveTable::DirectiveTable() {
 
   // IF _________________________________________________________
   directives.insert( pair<string, Directive>( "IF", Directive("IF", 1, 0) ) );
+  preprocess_dirs.insert( pair<string, Directive>( "IF", Directive("IF", 1, 0) ) );
   signature.push_back(TokenType::DIRECTIVE_TOKEN);
   signature.push_back(TokenType::SYMBOL);
   directives.at("IF").signatures.push_back(signature);
@@ -75,12 +77,14 @@ DirectiveTable::DirectiveTable() {
 
   // MACRO _________________________________________________________
   directives.insert( pair<string, Directive>( "MACRO", Directive("MACRO", 0, 0) ) );
+  preprocess_dirs.insert( pair<string, Directive>( "MACRO", Directive("MACRO", 0, 0) ) );
   signature.push_back(TokenType::DIRECTIVE_TOKEN);
   directives.at("MACRO").signatures.push_back(signature);
   signature.clear();
 
   // ENDMACRO  _________________________________________________________
   directives.insert( pair<string, Directive>( "END", Directive("END", 0, 0) ) );
+  preprocess_dirs.insert( pair<string, Directive>( "END", Directive("END", 0, 0) ) );
   signature.push_back(TokenType::DIRECTIVE_TOKEN);
   directives.at("END").signatures.push_back(signature);
   signature.clear();
@@ -101,7 +105,21 @@ void DirectiveTable::printDirectives() {
       }
       cout << endl;
     }
-
   }
+}
 
+Directive DirectiveTable::get(const string &token_value) {
+  return directives.at(token_value);
+}
+
+Directive DirectiveTable::get(const Token &token) {
+  return directives.at(token.tvalue);
+}
+
+bool DirectiveTable::isPreProcessDirective(const string &token_value) {
+  return (preprocess_dirs.count(token_value) >= 0);
+}
+
+bool DirectiveTable::isPreProcessDirective(const Token &token) {
+  return (preprocess_dirs.count(token.tvalue) >= 0);
 }

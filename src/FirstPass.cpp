@@ -10,7 +10,7 @@ SymbolTable FirstPass::exec() {
     for (auto token : program.tokens.at(line)) {
       cout << token.tvalue << " ";
     }
-    cout << endl;
+    cout << parser.calculateSizeOfExpression(program.tokens.at(line)) << endl;
   }
 
   SymbolTable symbol_table = SymbolTable();

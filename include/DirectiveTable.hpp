@@ -7,6 +7,7 @@
 
 #include "Directive.hpp"
 #include "TokenType.hpp"
+#include "Token.hpp"
 #include "helper.hpp"
 
 using ::std::string;
@@ -17,8 +18,13 @@ class DirectiveTable {
 public:
   DirectiveTable();
   void printDirectives();
+  Directive get(const string &);
+  Directive get(const Token &);
+  bool isPreProcessDirective(const string &);
+  bool isPreProcessDirective(const Token &);
 
   map<string, Directive> directives;
+  map<string, Directive> preprocess_dirs;
 
 };
 

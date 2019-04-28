@@ -7,6 +7,7 @@
 
 #include "Instruction.hpp"
 #include "TokenType.hpp"
+#include "Token.hpp"
 #include "helper.hpp"
 
 using ::std::string;
@@ -17,6 +18,8 @@ class InstructionTable {
 public:
   InstructionTable();
   void printInstructions();
+  Instruction get(const string &);
+  Instruction get(const Token &);
 
   map<string, Instruction> instructions;
 
