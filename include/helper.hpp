@@ -5,6 +5,7 @@
 #include <string>
 #include <cstring>
 #include <vector>
+#include <algorithm>
 
 #include "TokenType.hpp"
 

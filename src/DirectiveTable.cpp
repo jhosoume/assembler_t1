@@ -80,9 +80,9 @@ DirectiveTable::DirectiveTable() {
   signature.clear();
 
   // ENDMACRO  _________________________________________________________
-  directives.insert( pair<string, Directive>( "ENDMACRO", Directive("ENDMACRO", 0, 0) ) );
+  directives.insert( pair<string, Directive>( "END", Directive("END", 0, 0) ) );
   signature.push_back(TokenType::DIRECTIVE_TOKEN);
-  directives.at("ENDMACRO").signatures.push_back(signature);
+  directives.at("END").signatures.push_back(signature);
   signature.clear();
 
 }

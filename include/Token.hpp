@@ -11,6 +11,7 @@ using ::std::string;
 class Token {
 public:
   Token(string, TokenType, bool);
+  Token();
   ~Token() {}
   string tvalue;
   TokenType type;
