@@ -26,13 +26,14 @@ public:
   Parser(const InstructionTable &, const DirectiveTable &);
   bool isExpressionValid(const vector <Token> &);
   Token getInstructionOrDirective(const vector<Token> &);
-  int calculateSizeOfExpression(const vector<Token> &); 
+  int calculateSizeOfExpression(const vector<Token> &);
+  bool hasLabel(const vector <Token> &);
 
 
 private:
   InstructionTable instruction_table;
   DirectiveTable directive_table;
-  bool checkNumOfLabels(const std::vector<Token> &);
+  bool checkLabelValid(const std::vector<Token> &);
 
 };
 

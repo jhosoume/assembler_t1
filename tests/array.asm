@@ -6,7 +6,7 @@
 
 SECTION TEXT
     ; Initialise vector
-    INPU*T V + 0
+    INPUT V + 0
     INPUT V + 1
     INPUT V + 2
     INPUT V + 3

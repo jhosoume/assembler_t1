@@ -1,6 +1,7 @@
 #ifndef SYMBOLTABLE
 #define SYMBOLTABLE
 
+#include <iostream>
 #include <string>
 #include <map>
 #include <algorithm>
@@ -12,13 +13,21 @@
 using ::std::string;
 using ::std::map;
 using ::std::pair;
+using ::std::cout;
+using ::std::endl;
+using ::std::pair;
 
 class SymbolTable {
 public:
-  bool isSymbolDefined(Token);
-  bool isSymbolDefined(string);
-  int getSymbolAddress(Token);
-  int getSymbolAddress(string);
+  bool isSymbolDefined(const Token &);
+  bool isSymbolDefined(const string &);
+
+  int getSymbolAddress(const Token &);
+  int getSymbolAddress(const string &);
+
+  void addSymbol(string, int);
+  void addSymbol(Token, int);
+
   void listTable();
 
 private:

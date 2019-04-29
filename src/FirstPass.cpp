@@ -5,14 +5,14 @@ FirstPass::FirstPass(const Parser &parser, const Program &prog)
   {}
 
 SymbolTable FirstPass::exec() {
-  for (int line = 0; line < program.tokens.size(); ++line) {
-    cout << line << " ";
-    for (auto token : program.tokens.at(line)) {
-      cout << token.tvalue << " ";
-    }
-    cout << parser.calculateSizeOfExpression(program.tokens.at(line)) << endl;
-  }
-
   SymbolTable symbol_table = SymbolTable();
+  int program_counter = 0;
+  for (int line = 0; line < program.tokens.size(); ++line) {
+    if ( parser.hasLabel(program.tokens.at(line)) ) {
+      symbol_table.addSymbol(program.tokens.at(line).front(), program_counter);
+    }
+    program_counter += parser.calculateSizeOfExpression(program.tokens.at(line));
+  }
+  symbol_table.listTable();
   return symbol_table;
 }
