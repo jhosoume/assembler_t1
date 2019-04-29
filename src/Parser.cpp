@@ -1,90 +1,94 @@
 #include "Parser.hpp"
 
-Parser::Parser() {
-  const string tmp_letters = "ABCDEFGHIJKLMNOPQRSTUVXWYZ";
-  const string tmp_numbers = "0123456789";
-  const string tmp_specials = "_";
-  for (auto character : tmp_letters) {
-    validCharacters.insert(character);
-    validFirstCharacters.insert(character);
+Parser::Parser(const InstructionTable &inst_t, const DirectiveTable &dir_t)
+  : instruction_table{inst_t}, directive_table{dir_t}
+{}
+
+// Make sintatic analysis of a line of tokens (Expression)
+bool Parser::isExpressionValid(const vector<Token> &tokens) {
+  return checkLabelValid(tokens);
+}
+
+bool Parser::checkLabelValid(const vector <Token> &tokens) {
+  int num_labels = 0;
+  for (int token_indx = 0; token_indx < tokens.size(); ++token_indx) {
+    if (tokens.at(token_indx).type == TokenType::LABEL_COLON) {
+      ++num_labels;
+      // Verifies if colon has a symbol defining a label before
+      if (token_indx == 0 ||
+          tokens.at(token_indx - 1).type != TokenType::SYMBOL) {
+            cout << "[ERR] Colon is not accompanied by a label!" << endl;
+            return false;
+      }
+    }
   }
-  for (auto character : tmp_numbers) {
-    validCharacters.insert(character);
+  // Only valid if there is one or none labels
+  bool result = num_labels < 1;
+  if (!result)
+    cout << "[ERROR] Expression has more than one label!";
+  return result;
+}
+
+bool Parser::hasLabel(const vector <Token> &tokens) {
+  for (const Token &token : tokens) {
+    if (token.type == TokenType::LABEL_COLON) {
+      return true;
+    }
   }
-  for (auto character : tmp_specials) {
-    validCharacters.insert(character);
-    validFirstCharacters.insert(character);
+  return false;
+}
+
+// Get the main token of the expression. All expressions needs a directive
+// or an instruction
+Token Parser::getInstructionOrDirective(const vector<Token> &tokens) {
+  int num_dir_or_inst = 0;
+  Token dir_or_inst;
+  for (const Token &token : tokens) {
+    if(token.type == TokenType::INSTRUCTION_TOKEN ||
+       token.type == TokenType::DIRECTIVE_TOKEN   ||
+       token.type == TokenType::SECTION           ||
+       token.type == TokenType::MACRO             ||
+       token.type == TokenType::ENDMACRO
+    ) {
+      ++num_dir_or_inst;
+      dir_or_inst = token;
+    }
   }
-  validFirstCharacters.insert('&');
-}
-
-// Receives a line and separates it into tokens, returning a vector of all
-// the tokens in the line, classiying them and checking if they are valid
-// PUT ALL OF THE TOKEN VALUES IN UPPERCASE
-vector<Token> Parser::splitIntoTokens(string line) {
-  string delimiters = "\t   ";
-  vector<Token> tokens;
-  vector<string> line_words = split(line, delimiters);
-  for (auto word : line_words) {
-    std::transform(word.begin(), word.end(), word.begin(), ::toupper);
-    tokens.push_back(Token(word, classifyToken(word), isTokenValid(word)));
+  if (num_dir_or_inst > 1) {
+    cout << "[ERR] Line with more than one instruction or directive!" << endl;
+  } else if (num_dir_or_inst <= 0) {
+    cout << "[ERR] Line does not have a directive or an instruction!" << endl;
   }
-  return tokens;
+  return dir_or_inst;
 }
 
-// Function that groups up
-bool Parser::isTokenValid(string token) {
-  return checkValidNumberOfChars(token) &
-         checkIfAllCharactersAreValid(token) &
-         checkIfSymbolStartsCorrectly(token);
-}
-
-// Classification of token accordingly to its content
-TokenType Parser::classifyToken(string token) {
-  if (token.compare("") == 0) {
-      return TokenType::EMPTY;
-  } else if (token.compare(" ") == 0) {
-      return TokenType::EMPTY;
-  } else if (token.compare("\t") == 0) {
-      return TokenType::EMPTY;
-  } else if (token.compare("\n") == 0) {
-      return TokenType::EMPTY;
-  } else if (token.compare(" ") == 0) {
-      return TokenType::EMPTY;
-  } else if (token.compare(";") == 0) {
-      return TokenType::COMMENT_SEMICOLON;
-  } else if (token.compare(":") == 0) {
-      return TokenType::LABEL_COLON;
-  } else if (token.compare("+") == 0) {
-      return TokenType::ADD_SYMBOL;
-  } else if (token.compare("SECTION") == 0) {
-      return TokenType::SECTION;
-  } else if (token.compare("DATA") == 0) {
-      return TokenType::DATA_SECTION;
-  } else if (token.compare("TEXT") == 0) {
-      return TokenType::TEXT_SECTION;
-  } else if (token.compare("MACRO") == 0) {
-      return TokenType::MACRO;
-  } else if (token.compare("ENDMACRO") == 0) {
-      return TokenType::ENDMACRO;
-  } else if (token.compare(",") == 0) {
-      return TokenType::COMMA_ARG_SEPARATOR;
-  } else if (token.at(0) == '&') {
-      return TokenType::MACRO_PARAMETER;
+// Function to calculate the total size of the instruction or directive
+int Parser::calculateSizeOfExpression(const vector<Token> &tokens) {
+  int size = 0;
+  Token dir_inst_token = getInstructionOrDirective(tokens);
+  // All instructions have a defined size
+  if (dir_inst_token.type == TokenType::INSTRUCTION_TOKEN) {
+    return instruction_table.get(dir_inst_token).size;
+  // Some directives have a variable size
+  } else if (dir_inst_token.type == TokenType::DIRECTIVE_TOKEN) {
+    size = directive_table.get(dir_inst_token).size;
+    // If the directive is a space, it depends on the allocated size
+    if (dir_inst_token.tvalue == "SPACE") {
+        if (tokens.back().type == TokenType::NUMBER_DECIMAL)
+          return std::stoi(tokens.back().tvalue);
+        else if (tokens.back().type == TokenType::NUMBER_HEX)
+          return std::stoi(tokens.back().tvalue);
+        else
+          return 1;
+    }
+    return size;
+  } else if (dir_inst_token.type == TokenType::SECTION) {
+    return 0;
+  } else if (directive_table.isPreProcessDirective(dir_inst_token)) {
+    cout << "[ERR] Pre processement directive was not dealt correctly!" << endl;
+    return 0;
+  } else {
+    cout << "[ERR] Line does not have a directive or an instruction!" << endl;
+    return 0;
   }
-  return TokenType::SYMBOL;
-}
-
-bool Parser::checkValidNumberOfChars(string token) {
-  return token.size() <= 50;
-}
-
-bool Parser::checkIfSymbolStartsCorrectly(string token) {
-  const char firstChar = token.at(0);
-  return (validFirstCharacters.find(firstChar) != validFirstCharacters.end());
-}
-
-bool Parser::checkIfAllCharactersAreValid(string token) {
-  //TODO
-  return true;
 }

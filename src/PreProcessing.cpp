@@ -1,9 +1,9 @@
 #include "PreProcessing.hpp"
 
-PreProcessor::PreProcessor(File file, Parser parser)
-  : input_file{file}, parser{parser}
+PreProcessor::PreProcessor(const File &file, const Scanner &scanner, Program &prog)
+  : input_file{file}, scanner{scanner}, program{prog}
   {
-    // Create set of all special characters that need spacing
+    // Create set of all special characters that need spacing for token identification
     validSpecialCharacters.insert(';');
     validSpecialCharacters.insert('+');
     validSpecialCharacters.insert(':');
@@ -18,7 +18,10 @@ void PreProcessor::exec() {
   }
   string line;
   string processed_line;
+  int program_size = 0;
   vector<Token> tokens;
+  // Used for verification if label is in a line before
+  bool needs_concate = false;
 
   // Pre process each line individually
   while(std::getline(ifs, line)) {
@@ -34,12 +37,25 @@ void PreProcessor::exec() {
     }
     // Add space between tokens to make process of separation easier
     processed_line = spaceTokens(processed_line);
-    cout << processed_line << endl;
     // Split line in tokens and get them all in uppercase
-    tokens = parser.splitIntoTokens(processed_line);
-    for (auto token : tokens) {
-      cout << "Token value: " << token.tvalue << " " << TokenTypeToString(token.type) << endl;
+    tokens = scanner.splitIntoTokens(processed_line);
+    // Check if last line parsed was just a label
+    if (needs_concate) {
+      // Concatenates with the last line
+      program.tokens.back().insert(program.tokens.back().end(), tokens.begin(), tokens.end());
+      needs_concate = false;
+    } else {
+      // If last line was not a lone label
+      program.tokens.push_back(tokens);
+      ++program_size;
     }
+    if (tokens.back().type == TokenType::LABEL_COLON) {
+      needs_concate = true;
+    }
+  }
+  if (program_size != program.tokens.size()) {
+    // cout << "Program counted: " << program_size << " Program size: " << program.tokens.size();
+    throw std::runtime_error("[ERR] Program was not read correctly!");
   }
 }
 
@@ -62,4 +78,16 @@ string PreProcessor::spaceTokens(string line) {
 // Remove comments from the rest of the line
 string PreProcessor::removeComments(string line) {
   return line.substr(0, line.find(";"));
+}
+
+void PreProcessor::writePreProcessedFile() {
+  std::ofstream preprocessed_file;
+  preprocessed_file.open(input_file.name() + ".pre");
+  for (const vector<Token> &line : program.tokens) {
+    for (const Token &token : line) {
+      preprocessed_file << token.tvalue << " ";
+    }
+    preprocessed_file << endl;
+  }
+  preprocessed_file.close();
 }
