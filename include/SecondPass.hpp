@@ -1,27 +1,28 @@
-#ifndef FIRSTP
-#define FIRSTP
+#ifndef SECONDP
+#define SECONDP
 
 #include <iostream>
 #include <string>
+#include <fstream>
 
 #include "Parser.hpp"
 #include "Program.hpp"
 #include "SymbolTable.hpp"
+#include "Token.hpp"
 
 using ::std::string;
 using ::std::cout;
 using ::std::endl;
 
-class FirstPass {
+class SecondPass {
 public:
-  FirstPass(const Parser &, const Program &);
-  SymbolTable exec();
+  SecondPass(const Parser &, const Program &, const SymbolTable &);
+  void exec();
 
 private:
   Parser parser;
   Program program;
-  bool text_section;
-  bool data_section;
+  SymbolTable symbol_table;
 };
 
 

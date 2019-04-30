@@ -18,7 +18,7 @@ void PreProcessor::exec() {
   }
   string line;
   string processed_line;
-  int program_size = 0;
+  unsigned int program_size = 0;
   vector<Token> tokens;
   // Used for verification if label is in a line before
   bool needs_concate = false;

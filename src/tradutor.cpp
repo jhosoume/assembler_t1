@@ -15,6 +15,8 @@ int main(int argc, char **argv) {
   // prog.showTokens();
   zero_run.writePreProcessedFile();
   FirstPass first_pass = FirstPass(parser, prog);
-  first_pass.exec();
+  SymbolTable symbol_table = first_pass.exec();
+  SecondPass second_pass = SecondPass(parser, prog, symbol_table);
+  second_pass.exec();
   return 0;
 }

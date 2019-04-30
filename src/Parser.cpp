@@ -11,11 +11,11 @@ bool Parser::isExpressionValid(const vector<Token> &tokens) {
 
 bool Parser::checkLabelValid(const vector <Token> &tokens) {
   int num_labels = 0;
-  for (int token_indx = 0; token_indx < tokens.size(); ++token_indx) {
+  for (unsigned int token_indx = 0; token_indx < tokens.size(); ++token_indx) {
     if (tokens.at(token_indx).type == TokenType::LABEL_COLON) {
       ++num_labels;
       // Verifies if colon has a symbol defining a label before
-      if (token_indx == 0 ||
+      if (token_indx <= 0 ||
           tokens.at(token_indx - 1).type != TokenType::SYMBOL) {
             cout << "[ERR] Colon is not accompanied by a label!" << endl;
             return false;

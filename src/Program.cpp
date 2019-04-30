@@ -6,7 +6,7 @@ Program::Program()
 
 void Program::showTokenswithType() {
   cout << endl << "Printing Tokens and Types" << endl;
-  for (int line = 0; line < tokens.size(); ++line) {
+  for (unsigned int line = 0; line < tokens.size(); ++line) {
     for (auto token : tokens.at(line)) {
       cout << line << " Token-> " << token.tvalue << " value-> " << TokenTypeToString(token.type) << endl;
     }
@@ -14,7 +14,7 @@ void Program::showTokenswithType() {
 }
 
 void Program::showTokens() {
-  for (int line = 0; line < tokens.size(); ++line) {
+  for (unsigned int line = 0; line < tokens.size(); ++line) {
     cout << line << " ";
     for (auto token : tokens.at(line)) {
       cout << token.tvalue << " ";
