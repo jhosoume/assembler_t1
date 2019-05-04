@@ -14,5 +14,6 @@ SymbolTable FirstPass::exec() {
     program_counter += parser.calculateSizeOfExpression(program.tokens.at(line));
   }
   symbol_table.listTable();
+  program.total_size = program_counter;
   return symbol_table;
 }

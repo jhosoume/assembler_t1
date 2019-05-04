@@ -23,12 +23,11 @@ using ::std::set;
 
 class PreProcessor {
 public:
-  PreProcessor(const File &, const Scanner &, Program &);
+  PreProcessor(const Scanner &, Program &);
   void exec();
   void writePreProcessedFile();
 
 private:
-  File input_file;
   Scanner scanner;
   Program &program;
   // Show program

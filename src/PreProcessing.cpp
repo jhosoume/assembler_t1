@@ -1,7 +1,7 @@
 #include "PreProcessing.hpp"
 
-PreProcessor::PreProcessor(const File &file, const Scanner &scanner, Program &prog)
-  : input_file{file}, scanner{scanner}, program{prog}
+PreProcessor::PreProcessor(const Scanner &scanner, Program &prog)
+  : scanner{scanner}, program{prog}
   {
     // Create set of all special characters that need spacing for token identification
     validSpecialCharacters.insert(';');
@@ -11,10 +11,10 @@ PreProcessor::PreProcessor(const File &file, const Scanner &scanner, Program &pr
   }
 
 void PreProcessor::exec() {
-  std::ifstream ifs(input_file.fullname());
+  std::ifstream ifs(program.file.fullname());
   // Testing if file can be oppened
   if (!ifs.is_open()) {
-    throw std::runtime_error("[ERR] " + input_file.fullname() + " could not be opened");
+    throw std::runtime_error("[ERR] " + program.file.fullname() + " could not be opened");
   }
   string line;
   string processed_line;
@@ -82,7 +82,7 @@ string PreProcessor::removeComments(string line) {
 
 void PreProcessor::writePreProcessedFile() {
   std::ofstream preprocessed_file;
-  preprocessed_file.open(input_file.name() + ".pre");
+  preprocessed_file.open(program.file.name() + ".pre");
   for (const vector<Token> &line : program.tokens) {
     for (const Token &token : line) {
       preprocessed_file << token.tvalue << " ";
