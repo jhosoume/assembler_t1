@@ -20,6 +20,8 @@ public:
 private:
   Parser parser;
   Program program;
+  bool text_section;
+  bool data_section;
 };
 
 

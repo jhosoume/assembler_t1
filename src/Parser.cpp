@@ -11,13 +11,13 @@ bool Parser::isExpressionValid(const vector<Token> &tokens) {
 
 bool Parser::checkLabelValid(const vector <Token> &tokens) {
   int num_labels = 0;
-  for (int token_indx = 0; token_indx < tokens.size(); ++token_indx) {
+  for (unsigned int token_indx = 0; token_indx < tokens.size(); ++token_indx) {
     if (tokens.at(token_indx).type == TokenType::LABEL_COLON) {
       ++num_labels;
       // Verifies if colon has a symbol defining a label before
-      if (token_indx == 0 ||
+      if (token_indx <= 0 ||
           tokens.at(token_indx - 1).type != TokenType::SYMBOL) {
-            cout << "[ERR] Colon is not accompanied by a label!" << endl;
+            cout << "[SINTATIC ERR] Colon is not accompanied by a label!" << endl;
             return false;
       }
     }
@@ -25,7 +25,7 @@ bool Parser::checkLabelValid(const vector <Token> &tokens) {
   // Only valid if there is one or none labels
   bool result = num_labels < 1;
   if (!result)
-    cout << "[ERROR] Expression has more than one label!";
+    cout << "[SINTATIC ERR] Expression has more than one label!";
   return result;
 }
 
@@ -44,20 +44,20 @@ Token Parser::getInstructionOrDirective(const vector<Token> &tokens) {
   int num_dir_or_inst = 0;
   Token dir_or_inst;
   for (const Token &token : tokens) {
-    if(token.type == TokenType::INSTRUCTION_TOKEN ||
-       token.type == TokenType::DIRECTIVE_TOKEN   ||
-       token.type == TokenType::SECTION           ||
-       token.type == TokenType::MACRO             ||
-       token.type == TokenType::ENDMACRO
+    if (token.type == TokenType::INSTRUCTION_TOKEN ||
+        token.type == TokenType::DIRECTIVE_TOKEN   ||
+        token.type == TokenType::SECTION           ||
+        token.type == TokenType::MACRO             ||
+        token.type == TokenType::ENDMACRO
     ) {
       ++num_dir_or_inst;
       dir_or_inst = token;
     }
   }
   if (num_dir_or_inst > 1) {
-    cout << "[ERR] Line with more than one instruction or directive!" << endl;
+    cout << "[SINTATIC ERR] Line with more than one instruction or directive!" << endl;
   } else if (num_dir_or_inst <= 0) {
-    cout << "[ERR] Line does not have a directive or an instruction!" << endl;
+    cout << "[SINTATIC ERR] Line does not have a directive or an instruction!" << endl;
   }
   return dir_or_inst;
 }
@@ -85,10 +85,10 @@ int Parser::calculateSizeOfExpression(const vector<Token> &tokens) {
   } else if (dir_inst_token.type == TokenType::SECTION) {
     return 0;
   } else if (directive_table.isPreProcessDirective(dir_inst_token)) {
-    cout << "[ERR] Pre processement directive was not dealt correctly!" << endl;
+    cout << "[SEMANTIC ERR] Pre processement directive was not dealt correctly!" << endl;
     return 0;
   } else {
-    cout << "[ERR] Line does not have a directive or an instruction!" << endl;
+    cout << "[SINTATIC ERR] Line does not have a directive or an instruction!" << endl;
     return 0;
   }
 }
