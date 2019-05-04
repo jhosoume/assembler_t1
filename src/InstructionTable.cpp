@@ -192,7 +192,13 @@ void InstructionTable::printInstructions() {
       }
     cout << endl;
     }
-
   }
+}
 
+Instruction InstructionTable::get(const string &token_value) {
+  return instructions.at(token_value);
+}
+
+Instruction InstructionTable::get(const Token &token) {
+  return instructions.at(token.tvalue);
 }
