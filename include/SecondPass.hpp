@@ -35,6 +35,7 @@ private:
   InstructionTable instruction_table;
   DirectiveTable directive_table;
   vector<int> exec_code;
+
 };
 
 

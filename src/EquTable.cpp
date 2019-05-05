@@ -18,7 +18,7 @@ Token EquTable::getEquToken(const string &symbol) {
 
 void EquTable::addEqu(string symbol, Token ref) {
   if ( isEquDefined(symbol) ) {
-    cout << "[SEMANTIC ERR] Equ is being redefined!" << endl;
+    cout << "[SEMANTIC ERR] EQU symbol is being redefined!" << endl;
   }
   definitions.insert(pair <string, Token> (symbol, ref));
 }
@@ -28,9 +28,11 @@ void EquTable::addEqu(Token token, Token ref) {
 }
 
 void EquTable::listTable() {
+  cout << "_________________________________________________________" << endl;
   cout << "Listing Equ Table" << endl;
   cout << "LABEL: Value" << endl;
   for (const auto &pair_symbol : definitions) {
     cout << pair_symbol.first << ": " << pair_symbol.second.tvalue << endl;
   }
+  cout << "_________________________________________________________" << endl;
 }
