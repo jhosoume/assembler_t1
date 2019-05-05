@@ -92,3 +92,37 @@ int Parser::calculateSizeOfExpression(const vector<Token> &tokens) {
     return 0;
   }
 }
+
+int Parser::hasSumInLine(const vector<Token> &tokens) {
+  int num_sums = 0;
+  for (const Token &token : tokens) {
+    if (token.type == TokenType::ADD_SYMBOL) {
+      ++num_sums;
+    }
+  }
+  return num_sums;
+}
+
+
+vector<vector<Token>> Parser::groupOps(const vector<Token> &tokens) {
+  vector< vector<Token> > operands;
+  vector<Token> operand;
+  size_t indx = 0;
+  while (indx < tokens.size()) {
+    // Ignore label
+    while (indx < tokens.size() &&
+            (tokens.at(indx).type != TokenType::INSTRUCTION_TOKEN &&
+             tokens.at(indx).type != TokenType::DIRECTIVE_TOKEN)) {
+      ++indx;
+    }
+    // Skip Instruction or Directive
+    ++indx;
+    // Stop only if find comma separator
+    while (indx < tokens.size() && tokens.at(indx).type != TokenType::COMMA_ARG_SEPARATOR) {
+      operand.push_back(tokens.at(indx));
+      ++indx;
+    }
+    operands.push_back(operand);
+  }
+  return operands;
+}

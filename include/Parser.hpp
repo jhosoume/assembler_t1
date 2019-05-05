@@ -24,10 +24,12 @@ using ::std::endl;
 class Parser {
 public:
   Parser(const InstructionTable &, const DirectiveTable &);
-  bool isExpressionValid(const vector <Token> &);
+  bool isExpressionValid(const vector<Token> &);
   Token getInstructionOrDirective(const vector<Token> &);
   int calculateSizeOfExpression(const vector<Token> &);
-  bool hasLabel(const vector <Token> &);
+  bool hasLabel(const vector<Token> &);
+  int hasSumInLine(const vector<Token> &);
+  vector<vector<Token>> groupOps(const vector<Token> &);
 
 
 private:

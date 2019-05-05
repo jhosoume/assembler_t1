@@ -21,13 +21,26 @@ void SecondPass::exec() {
       tokens.assign(tokens.begin() + 2, tokens.end());
     }
     if (tokens.at(0).type == TokenType::INSTRUCTION_TOKEN) {
+      // If instruction, needs to add opcode then deal with operands
       exec_code.push_back(instruction_table.get(tokens.at(0)).op_code);
       cout << exec_code.back() << " ";
+      parser.groupOps(program.tokens.at(line));
       // Check if has sum in line (Add in parse)
     } else if (tokens.at(0).tvalue == "CONST") {
-
+      // If const, only add number to be in memory
+      exec_code.push_back(std::stoi( tokens.back().tvalue) );
+      cout << exec_code.back() << " ";
     } else if (tokens.at(0).tvalue == "SPACE") {
-
+      // If space, add zeros to memory
+      if (tokens.back().type == TokenType::NUMBER_DECIMAL) {
+        for (int num_zeros = 0; num_zeros < std::stoi(tokens.back().tvalue); ++num_zeros) {
+          exec_code.push_back(0);
+          cout << exec_code.back() << " ";
+        }
+      } else {
+        exec_code.push_back(0);
+        cout << exec_code.back() << " ";
+      }
     }
     cout << endl;
   }

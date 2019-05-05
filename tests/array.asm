@@ -4,8 +4,8 @@
 ;
 ; @brief Read an array from input and multiply by 3
 
-XUXU: EQU 1
-UM: EQU XUXU
+XUXU: equ 1
+UM: EQU xuxu
 
 SECTION TEXT
     ; Initialise vector
