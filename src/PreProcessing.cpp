@@ -1,7 +1,7 @@
 #include "PreProcessing.hpp"
 
-PreProcessor::PreProcessor(const Scanner &scanner, Program &prog)
-  : scanner{scanner}, program{prog}
+PreProcessor::PreProcessor(const Scanner &scanner, const Parser &parser, Program &prog)
+  : scanner{scanner}, parser{parser}, program{prog}
   {
     // Create set of all special characters that need spacing for token identification
     validSpecialCharacters.insert(';');
@@ -22,7 +22,7 @@ void PreProcessor::exec() {
   vector<Token> tokens;
   // Used for verification if label is in a line before
   bool needs_concate = false;
-
+  Token main_token;
   // Pre process each line individually
   while(std::getline(ifs, line)) {
     // Call function to remove all comentaries (all chars after ;)
@@ -52,11 +52,28 @@ void PreProcessor::exec() {
     if (tokens.back().type == TokenType::LABEL_COLON) {
       needs_concate = true;
     }
+
   }
   if (program_size != program.tokens.size()) {
     // cout << "Program counted: " << program_size << " Program size: " << program.tokens.size();
     throw std::runtime_error("[ERR] Program was not read correctly!");
   }
+  for (unsigned int line = 0; line < program.tokens.size(); ++line) {
+    main_token = parser.getInstructionOrDirective(program.tokens.at(line));
+    // Redefines symbol acording to EQU
+    for (unsigned int indx = 0; indx < program.tokens.at(line).size(); ++indx) {
+      if (equ_table.isEquDefined(tokens.at(indx))) {
+        program.tokens.at(line).at(indx) = equ_table.getEquToken(program.tokens.at(indx));
+      }
+    }
+    // Add label to equ_table
+    if (main_token.tvalue == "EQU") {
+      dealingWithEqu(program.tokens.at(line));
+      program.tokens.erase(program.tokens.begin() + line);
+      --line;
+    }
+  }
+  equ_table.listTable();
 }
 
 // Creates separation of special characters from the rest of tokens to
@@ -90,4 +107,16 @@ void PreProcessor::writePreProcessedFile() {
     preprocessed_file << endl;
   }
   preprocessed_file.close();
+}
+
+void PreProcessor::dealingWithEqu(vector<Token> tolkiens) {
+  if (parser.hasLabel(tolkiens)) {
+    if (equ_table.isEquDefined(tolkiens.front())) {
+      cout << "[SEMANTIC ERR] Equ label already in use." << endl;
+    } else {
+      equ_table.addEqu(tolkiens.front(), tolkiens.back());
+    }
+  } else {
+    cout << "[SYNTAX ERR] Missing label." << endl;
+  }
 }

@@ -7,8 +7,9 @@ int main(int argc, char **argv) {
   Parser parser = Parser(instruction_table, directive_table);
   // Get file to be assembled
   File input_file = getFileNameFromArg(argc, argv);
+
   Program prog = Program(input_file);
-  PreProcessor zero_run = PreProcessor(scanner, prog);
+  PreProcessor zero_run = PreProcessor(scanner, parser, prog);
   // instruction_table.printInstructions();
   // directive_table.printDirectives();
   zero_run.exec();
