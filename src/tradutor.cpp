@@ -9,7 +9,7 @@ int main(int argc, char **argv) {
   File input_file = getFileNameFromArg(argc, argv);
 
   Program prog = Program(input_file);
-  PreProcessor zero_run = PreProcessor(scanner, prog);
+  PreProcessor zero_run = PreProcessor(scanner, parser, prog);
   // instruction_table.printInstructions();
   // directive_table.printDirectives();
   zero_run.exec();
