@@ -14,10 +14,11 @@ using ::std::endl;
 
 class Directive {
 public:
-  Directive(string, int);
+  Directive(string, int, int);
 
   string name;
   int max_operands; //Max number of operands
+  int size; //Max number of operands
   // [INSTRUCTION SYMBOL, INSTRUCTION SYMBOL ADD_SYMBOL NUMBER_DECIMAL]
   vector<vector<TokenType>> signatures;
 
