@@ -62,8 +62,8 @@ void PreProcessor::exec() {
     main_token = parser.getInstructionOrDirective(program.tokens.at(line));
     // Redefines symbol acording to EQU
     for (unsigned int indx = 0; indx < program.tokens.at(line).size(); ++indx) {
-      if (equ_table.isEquDefined(tokens.at(indx))) {
-        program.tokens.at(line).at(indx) = equ_table.getEquToken(program.tokens.at(indx));
+      if (equ_table.isEquDefined(program.tokens.at(line).at(indx))) {
+        program.tokens.at(line).at(indx) = equ_table.getEquToken(program.tokens.at(line).at(indx));
       }
     }
     // Add label to equ_table
