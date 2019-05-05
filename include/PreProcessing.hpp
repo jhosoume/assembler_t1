@@ -29,7 +29,7 @@ public:
   PreProcessor(const Scanner &, const Parser &, Program &);
   void exec();
   void writePreProcessedFile();
-  void dealingWithEqu(vector<Token>);
+  void dealingWithEqu(int line);
 
 private:
   Scanner scanner;
@@ -43,6 +43,8 @@ private:
   string spaceTokens(string);
   // Remove lines with comments
   string removeComments(string);
+  // Substitute Symbol if was defined in an EQU
+  void substEqu(int);
 };
 
 

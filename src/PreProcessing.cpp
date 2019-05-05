@@ -59,17 +59,11 @@ void PreProcessor::exec() {
     throw std::runtime_error("[ERR] Program was not read correctly!");
   }
   for (unsigned int line = 0; line < program.tokens.size(); ++line) {
-    main_token = parser.getInstructionOrDirective(program.tokens.at(line));
-    // Redefines symbol acording to EQU
-    for (unsigned int indx = 0; indx < program.tokens.at(line).size(); ++indx) {
-      if (equ_table.isEquDefined(program.tokens.at(line).at(indx))) {
-        program.tokens.at(line).at(indx) = equ_table.getEquToken(program.tokens.at(line).at(indx));
-      }
-    }
     // Add label to equ_table
+    main_token = parser.getInstructionOrDirective(program.tokens.at(line));
+    substEqu(line);
     if (main_token.tvalue == "EQU") {
-      dealingWithEqu(program.tokens.at(line));
-      program.tokens.erase(program.tokens.begin() + line);
+      dealingWithEqu(line);
       --line;
     }
   }
@@ -109,14 +103,24 @@ void PreProcessor::writePreProcessedFile() {
   preprocessed_file.close();
 }
 
-void PreProcessor::dealingWithEqu(vector<Token> tolkiens) {
-  if (parser.hasLabel(tolkiens)) {
-    if (equ_table.isEquDefined(tolkiens.front())) {
-      cout << "[SEMANTIC ERR] Equ label already in use." << endl;
+void PreProcessor::dealingWithEqu(int line) {
+  if (parser.hasLabel(program.tokens.at(line))) {
+    if (equ_table.isEquDefined(program.tokens.at(line).front())) {
+      cout << "[SEMANTIC ERR] Line: " << line << " | Equ label already in use." << endl;
     } else {
-      equ_table.addEqu(tolkiens.front(), tolkiens.back());
+      equ_table.addEqu(program.tokens.at(line).front(), program.tokens.at(line).back());
     }
   } else {
-    cout << "[SYNTAX ERR] Missing label." << endl;
+    cout << "[SYNTAX ERR] Line: " << line <<" | Missing label." << endl;
+  }
+  program.tokens.erase(program.tokens.begin() + line);
+}
+
+void PreProcessor::substEqu(int line) {
+  // Redefines symbol acording to EQU
+  for (unsigned int indx = 0; indx < program.tokens.at(line).size(); ++indx) {
+    if (equ_table.isEquDefined(program.tokens.at(line).at(indx))) {
+      program.tokens.at(line).at(indx) = equ_table.getEquToken(program.tokens.at(line).at(indx));
+    }
   }
 }
