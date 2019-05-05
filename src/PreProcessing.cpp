@@ -65,7 +65,19 @@ void PreProcessor::exec() {
     if (main_token.tvalue == "EQU") {
       dealingWithEqu(line);
       --line;
+    } else if (main_token.tvalue == "IF") {
+      if (program.tokens.at(line).back().type == TokenType::NUMBER_DECIMAL ||
+          program.tokens.at(line).back().type == TokenType::NUMBER_HEX) {
+        // If the argument is 0: erase this line and the next
+        if (std::stoi(program.tokens.at(line).back().tvalue) == 0) {
+          program.tokens.erase(program.tokens.begin() + line);
+          program.tokens.erase(program.tokens.begin() + line);
+        } else { // If the argument is not 0: erase this line
+          program.tokens.erase(program.tokens.begin() + line);
+        }
+      }
     }
+
   }
   equ_table.listTable();
 }
