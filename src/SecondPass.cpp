@@ -13,18 +13,26 @@ SecondPass::SecondPass(const Parser &parser,
 void SecondPass::exec() {
   // Open file for writing the object file
   vector<Token> tokens;
-  int operand;
+  vector < vector<Token> > operands;
   for (unsigned int line = 0; line < program.tokens.size(); ++line) {
     cout << line << " ";
     tokens = program.tokens.at(line);
+    // Not consider labels
     if (parser.hasLabel(tokens)) {
+      // If has label, put iterator after label
       tokens.assign(tokens.begin() + 2, tokens.end());
     }
     if (tokens.at(0).type == TokenType::INSTRUCTION_TOKEN) {
       // If instruction, needs to add opcode then deal with operands
       exec_code.push_back(instruction_table.get(tokens.at(0)).op_code);
       cout << exec_code.back() << " ";
-      parser.groupOps(program.tokens.at(line));
+      operands = parser.groupOps(program.tokens.at(line));
+      if (operands.size() > 0) {
+        for (const auto &operand : operands) {
+          exec_code.push_back(getAddrValueFromOperand(operand));
+          cout << exec_code.back() << " ";
+        }
+      }
       // Check if has sum in line (Add in parse)
     } else if (tokens.at(0).tvalue == "CONST") {
       // If const, only add number to be in memory
@@ -57,4 +65,13 @@ void SecondPass::showObjectCode() {
       cout << code << " ";
     }
     cout << endl;
+}
+
+int SecondPass::getAddrValueFromOperand(vector <Token> operand) {
+  int addr = symbol_table.getSymbolAddress(operand.at(0));
+  if (operand.size() > 1) {
+    // TODO pass conversion of string to number to the token class
+    addr += std::stoi(operand.back().tvalue);
+  }
+  return addr;
 }
