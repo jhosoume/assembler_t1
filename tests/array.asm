@@ -9,6 +9,7 @@ UM: EQU xuxu
 
 SECTION TEXT
     ; Initialise vector
+    COPY ONE, V + 1
     INPUT V + 0
     INPUT V + 1
     INPUT V + 2
