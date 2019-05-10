@@ -11,7 +11,7 @@ SymbolTable FirstPass::exec() {
     if ( parser.hasLabel(program.tokens.at(line)) ) {
       symbol_table.addSymbol(program.tokens.at(line).front(), program_counter);
     }
-    program_counter += parser.calculateSizeOfExpression(program.tokens.at(line));
+    program_counter += parser.calculateSizeOfExpression(program.tokens.at(line), line);
   }
   symbol_table.listTable();
   program.total_size = program_counter;

@@ -7,8 +7,11 @@
 XUXU: equ 1
 UM: EQU xuxu
 
+
+
 SECTION TEXT
     ; Initialise vector
+    IF UM
     COPY ONE, V + 1
     INPUT V + 0
     INPUT V + 1

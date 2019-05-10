@@ -25,8 +25,8 @@ class Parser {
 public:
   Parser(const InstructionTable &, const DirectiveTable &);
   bool isExpressionValid(const vector<Token> &);
-  Token getInstructionOrDirective(const vector<Token> &);
-  int calculateSizeOfExpression(const vector<Token> &);
+  Token getInstructionOrDirective(const vector<Token> &, int = 0);
+  int calculateSizeOfExpression(const vector<Token> &, int = 0);
   bool hasLabel(const vector<Token> &);
   int hasSumInLine(const vector<Token> &);
   vector<vector<Token>> groupOps(const vector<Token> &);
@@ -35,7 +35,7 @@ public:
 private:
   InstructionTable instruction_table;
   DirectiveTable directive_table;
-  bool checkLabelValid(const std::vector<Token> &);
+  bool checkLabelValid(const std::vector<Token> &, int = 0);
 
 };
 
