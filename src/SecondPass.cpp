@@ -29,7 +29,7 @@ void SecondPass::exec() {
       operands = parser.groupOps(program.tokens.at(line));
       if (operands.size() > 0) {
         for (const auto &operand : operands) {
-          exec_code.push_back(getAddrValueFromOperand(operand));
+          exec_code.push_back(getAddrValueFromOperand(operand, line));
           cout << exec_code.back() << " ";
         }
       }
@@ -67,11 +67,16 @@ void SecondPass::showObjectCode() {
     cout << endl;
 }
 
-int SecondPass::getAddrValueFromOperand(vector <Token> operand) {
-  int addr = symbol_table.getSymbolAddress(operand.at(0));
-  if (operand.size() > 1) {
-    // TODO pass conversion of string to number to the token class
-    addr += std::stoi(operand.back().tvalue);
+int SecondPass::getAddrValueFromOperand(vector <Token> operand, int line) {
+  try {
+    int addr = symbol_table.getSymbolAddress(operand.at(0));
+    if (operand.size() > 1) {
+      // TODO move conversion of string to number to the token class
+      addr += std::stoi(operand.back().tvalue);
+    }
+    return addr;
+  } catch(const std::out_of_range& e) {
+    cout << "[SEMANTIC ERR | Line " << line << "] Operand " << operand.at(0).tvalue << " not found in the Symbols Table." << endl;
+    return -1;
   }
-  return addr;
 }

@@ -28,7 +28,7 @@ int main(int argc, char **argv) {
                                       symbol_table,
                                       instruction_table,
                                       directive_table);
-  prog.showTokens();
+  // prog.showTokens();
   second_pass.exec();
   cout << "**********************" << endl;
   cout << "Finish Second Pass" << endl;
