@@ -12,6 +12,8 @@
 
 #include "helper.hpp"
 #include "Program.hpp"
+#include "MacroTable.hpp"
+#include "Macro.hpp"
 #include "Scanner.hpp"
 #include "Parser.hpp"
 #include "EquTable.hpp"
@@ -30,6 +32,7 @@ public:
   void exec();
   void writePreProcessedFile();
   void dealingWithEqu(int line);
+  void dealingWithIf(int line);
 
 private:
   Scanner scanner;

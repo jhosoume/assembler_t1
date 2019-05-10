@@ -12,7 +12,6 @@ class Token {
 public:
   Token(string, TokenType, bool);
   Token();
-  ~Token() {}
   string tvalue;
   TokenType type;
   bool valid;

@@ -60,7 +60,7 @@ void PreProcessor::exec() {
   }
   for (unsigned int line = 0; line < program.tokens.size(); ++line) {
     // Add label to equ_table
-    main_token = parser.getInstructionOrDirective(program.tokens.at(line));
+    main_token = parser.getInstructionOrDirective(program.tokens.at(line), line);
     substEqu(line);
     if (main_token.tvalue == "EQU") {
       dealingWithEqu(line);
@@ -72,14 +72,14 @@ void PreProcessor::exec() {
         if (std::stoi(program.tokens.at(line).back().tvalue) == 0) {
           program.tokens.erase(program.tokens.begin() + line);
           program.tokens.erase(program.tokens.begin() + line);
+          line -= 2;
         } else { // If the argument is not 0: erase this line
           program.tokens.erase(program.tokens.begin() + line);
+          --line;
         }
       }
     }
-
   }
-  equ_table.listTable();
 }
 
 // Creates separation of special characters from the rest of tokens to
