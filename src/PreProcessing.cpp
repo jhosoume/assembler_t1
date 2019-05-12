@@ -59,6 +59,7 @@ void PreProcessor::exec() {
     throw std::runtime_error("[ERR] Program was not read correctly!");
   }
   for (unsigned int line = 0; line < program.tokens.size(); ++line) {
+    parser.isExpressionValid(program.tokens.at(line), line);
     // Add label to equ_table
     main_token = parser.getInstructionOrDirective(program.tokens.at(line), line);
     substEqu(line);
