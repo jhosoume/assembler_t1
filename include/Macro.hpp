@@ -27,10 +27,9 @@ public:
   void addOperand(string);
   void addOperandPosition(string, int, int);
   void addMacroLines(vector<Token>);
-  vector <Token> macroLineWithSubstitions(vector <Token>);
+  vector < vector <Token> > macroWithSubstitions(vector <Token>);
   string name;
 
-private:
   vector <string> operands_names;
   map <string, vector< Position > > operands_positions;
   vector < vector<Token> > macro_definition;

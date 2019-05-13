@@ -21,7 +21,6 @@ void Macro::addMacroLines(vector<Token> line_tokens) {
   macro_definition.push_back(line_tokens);
 }
 
-vector <Token> Macro::macroLineWithSubstitions(vector <Token> line_tokens) {
+vector < vector <Token> > Macro::macroWithSubstitions(vector <Token> line_tokens) {
   //TODO
-  return line_tokens;
 }

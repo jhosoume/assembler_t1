@@ -23,6 +23,7 @@ void PreProcessor::exec() {
   // Used for verification if label is in a line before
   bool needs_concate = false;
   Token main_token;
+
   // Pre process each line individually
   while(std::getline(ifs, line)) {
     // Call function to remove all comentaries (all chars after ;)
@@ -65,7 +66,10 @@ void PreProcessor::exec() {
     substEqu(line);
     if (main_token.tvalue == "EQU") {
       dealingWithEqu(line);
-      --line;
+      program.tokens.erase(program.tokens.begin() + line);
+      if (line != 0) {
+        --line;
+      }
     } else if (main_token.tvalue == "IF") {
       if (program.tokens.at(line).back().type == TokenType::NUMBER_DECIMAL ||
           program.tokens.at(line).back().type == TokenType::NUMBER_HEX) {
@@ -73,14 +77,30 @@ void PreProcessor::exec() {
         if (std::stoi(program.tokens.at(line).back().tvalue) == 0) {
           program.tokens.erase(program.tokens.begin() + line);
           program.tokens.erase(program.tokens.begin() + line);
-          line -= 2;
+          if (line != 0) {
+            --line;
+          }
         } else { // If the argument is not 0: erase this line
           program.tokens.erase(program.tokens.begin() + line);
-          --line;
+          if (line != 0) {
+            --line;
+          }
         }
       }
     }
   }
+  // Macro is dealt last, because if the macro contains an EQU or IF it is already resolved
+  for (unsigned int line = 0; line < program.tokens.size(); ++line) {
+    line = substMacro(line);
+    main_token = parser.getInstructionOrDirective(program.tokens.at(line), line);
+    if (main_token.tvalue == "MACRO") {
+      dealingWithMacro(line);
+      if (line != 0) {
+        --line;
+      }
+    }
+  }
+  macro_table.printMacros();
 }
 
 // Creates separation of special characters from the rest of tokens to
@@ -126,7 +146,6 @@ void PreProcessor::dealingWithEqu(int line) {
   } else {
     cout << "[SYNTAX ERR] Line: " << line <<" | Missing label." << endl;
   }
-  program.tokens.erase(program.tokens.begin() + line);
 }
 
 void PreProcessor::substEqu(int line) {
@@ -136,4 +155,66 @@ void PreProcessor::substEqu(int line) {
       program.tokens.at(line).at(indx) = equ_table.getEquToken(program.tokens.at(line).at(indx));
     }
   }
+}
+
+void PreProcessor::dealingWithMacro(int line) {
+  Token main_token;
+  bool found_end = false;
+  string macro_name;
+  int num_operands = 0;
+  // Check if macro name is beign defined
+  if (parser.hasLabel(program.tokens.at(line))) {
+    // Check if the macro is being redefined
+    if (macro_table.isMacroDefined(program.tokens.at(line).front())) {
+      cout << "[SEMANTIC ERR] Line: " << line << " | Macro label already in use." << endl;
+    } else {
+      macro_name = program.tokens.at(line).front().tvalue;
+      Macro macro = Macro(macro_name);
+      // Body of the macro must be at the next line
+      if ((line + 1) == program.tokens.size()) {
+        cout << "[SYNTAX ERR] Line: " << line << " | Macro being defined in the last line." << endl;
+      }
+      // Get all operands
+      for (const Token &token : program.tokens.at(line)) {
+        if (token.type == TokenType::MACRO_PARAMETER) {
+          ++num_operands;
+          macro.addOperand(token.tvalue);
+        }
+      }
+      program.tokens.erase(program.tokens.begin() + line);
+      // For each line until the end, increment
+      for (unsigned int macro_line = (line + 1); macro_line < program.tokens.size(); ++macro_line) {
+        main_token = parser.getInstructionOrDirective(program.tokens.at(macro_line), macro_line);
+        if (main_token.type == TokenType::ENDMACRO) {
+          found_end = true;
+          program.tokens.erase(program.tokens.begin() + macro_line);
+          break;
+        }
+        macro.macro_definition.push_back(program.tokens.at(macro_line));
+        program.tokens.erase(program.tokens.begin() + macro_line);
+        --macro_line;
+      }
+      if (!found_end) {
+        cout << "[SYNTATIC ERROR] Macro does not have an end!" << endl;
+      }
+      macro_table.insert(macro_name, macro);
+    }
+  } else {
+    cout << "[SYNTAX ERR] Line: " << line <<" | Missing label." << endl;
+  }
+  program.tokens.erase(program.tokens.begin() + line);
+}
+
+int PreProcessor::substMacro(int line) {
+  // Redefines symbol acording to MACRO
+  std::vector<int>::iterator it;
+  for (unsigned int indx = 0; indx < program.tokens.at(line).size(); ++indx) {
+    if (macro_table.isMacroDefined(program.tokens.at(line).at(indx))) {
+      program.tokens.erase(program.tokens.begin() + line);
+      --line;
+      // program.tokens.insert()
+      cout << "MACRO FOUND!" << endl;
+    }
+  }
+  return line;
 }
