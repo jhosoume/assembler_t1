@@ -66,10 +66,7 @@ void PreProcessor::exec() {
     substEqu(line);
     if (main_token.tvalue == "EQU") {
       dealingWithEqu(line);
-      program.tokens.erase(program.tokens.begin() + line);
-      if (line != 0) {
-        --line;
-      }
+      --line;
     } else if (main_token.tvalue == "IF") {
       if (program.tokens.at(line).back().type == TokenType::NUMBER_DECIMAL ||
           program.tokens.at(line).back().type == TokenType::NUMBER_HEX) {
@@ -77,14 +74,10 @@ void PreProcessor::exec() {
         if (std::stoi(program.tokens.at(line).back().tvalue) == 0) {
           program.tokens.erase(program.tokens.begin() + line);
           program.tokens.erase(program.tokens.begin() + line);
-          if (line != 0) {
-            --line;
-          }
+          --line;
         } else { // If the argument is not 0: erase this line
           program.tokens.erase(program.tokens.begin() + line);
-          if (line != 0) {
-            --line;
-          }
+          --line;
         }
       }
     }
@@ -95,9 +88,7 @@ void PreProcessor::exec() {
     main_token = parser.getInstructionOrDirective(program.tokens.at(line), line);
     if (main_token.tvalue == "MACRO") {
       dealingWithMacro(line);
-      if (line != 0) {
-        --line;
-      }
+      --line;
     }
   }
   macro_table.printMacros();
@@ -146,6 +137,7 @@ void PreProcessor::dealingWithEqu(int line) {
   } else {
     cout << "[SYNTAX ERR] Line: " << line <<" | Missing label." << endl;
   }
+  program.tokens.erase(program.tokens.begin() + line);
 }
 
 void PreProcessor::substEqu(int line) {
