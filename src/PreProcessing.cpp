@@ -173,7 +173,6 @@ void PreProcessor::dealingWithMacro(int line) {
           macro.addOperand(token.tvalue);
         }
       }
-      program.tokens.erase(program.tokens.begin() + line);
       // For each line until the end, increment
       for (unsigned int macro_line = (line + 1); macro_line < program.tokens.size(); ++macro_line) {
         main_token = parser.getInstructionOrDirective(program.tokens.at(macro_line), macro_line);
@@ -200,13 +199,37 @@ void PreProcessor::dealingWithMacro(int line) {
 int PreProcessor::substMacro(int line) {
   // Redefines symbol acording to MACRO
   std::vector<int>::iterator it;
-  for (unsigned int indx = 0; indx < program.tokens.at(line).size(); ++indx) {
-    if (macro_table.isMacroDefined(program.tokens.at(line).at(indx))) {
-      program.tokens.erase(program.tokens.begin() + line);
-      --line;
-      // program.tokens.insert()
-      cout << "MACRO FOUND!" << endl;
+  vector <vector <Token>> macro_body;
+  bool subst = false;
+  Token tok;
+  vector <Token> parameters;
+  vector <Token> macro_line;
+  Macro myMacro;
+  if (macro_table.isMacroDefined(program.tokens.at(line).front())) {
+    subst = true;
+    myMacro = macro_table.get(program.tokens.at(line).front().tvalue);
+    for (unsigned int indx = 1; indx < program.tokens.at(line).size(); ++indx) {
+      tok = program.tokens.at(line).at(indx);
+      if (tok.type == TokenType::SYMBOL) {
+        parameters.push_back(tok);
+      }
     }
+  }
+  if (subst) {
+    if (parameters.size() != myMacro.getNumOperands()) {
+      cout << "[SYNTAX ERR] Line: " << line << " | Invalid Number of Parameters. "
+      << "Expected "<< myMacro.getNumOperands() << ", received " << parameters.size() << endl;
+    }
+    for (int indx = 0; indx < myMacro.macro_definition.size(); ++indx) {
+      macro_line = myMacro.macro_definition.at(indx);
+      for (int token_indx = 0; token_indx < macro_line.size(); ++token_indx) {
+        // if (std::find(parameters.begin(), parameters.end(), macro_line.at(token_indx).tvalue) != 0) {
+        // }
+      }
+      program.tokens.insert(program.tokens.begin() + line + 1 + indx, macro_line);
+    }
+    program.tokens.erase(program.tokens.begin() + line);
+    --line;
   }
   return line;
 }
