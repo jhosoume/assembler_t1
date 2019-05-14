@@ -12,6 +12,8 @@
 
 #include "helper.hpp"
 #include "Program.hpp"
+#include "MacroTable.hpp"
+#include "Macro.hpp"
 #include "Scanner.hpp"
 #include "Parser.hpp"
 #include "EquTable.hpp"
@@ -29,13 +31,18 @@ public:
   PreProcessor(const Scanner &, const Parser &, Program &);
   void exec();
   void writePreProcessedFile();
-  void dealingWithEqu(int line);
+  void dealingWithEqu(int);
+  void dealingWithIf(int);
+  void dealingWithMacro(int);
+  void substEqu(int);
+  int substMacro(int);
 
 private:
   Scanner scanner;
   Parser parser;
   Program &program;
   EquTable equ_table;
+  MacroTable macro_table;
   // Show program
   // Valid Characters that are used as tokens
   set<char> validSpecialCharacters;
@@ -44,7 +51,6 @@ private:
   // Remove lines with comments
   string removeComments(string);
   // Substitute Symbol if was defined in an EQU
-  void substEqu(int);
 };
 
 

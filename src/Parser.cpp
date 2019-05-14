@@ -5,11 +5,11 @@ Parser::Parser(const InstructionTable &inst_t, const DirectiveTable &dir_t)
 {}
 
 // Make sintatic analysis of a line of tokens (Expression)
-bool Parser::isExpressionValid(const vector<Token> &tokens) {
-  return checkLabelValid(tokens);
+bool Parser::isExpressionValid(const vector<Token> &tokens, int line) {
+  return checkLabelValid(tokens, line);
 }
 
-bool Parser::checkLabelValid(const vector <Token> &tokens) {
+bool Parser::checkLabelValid(const vector <Token> &tokens, int line) {
   int num_labels = 0;
   for (unsigned int token_indx = 0; token_indx < tokens.size(); ++token_indx) {
     if (tokens.at(token_indx).type == TokenType::LABEL_COLON) {
@@ -17,15 +17,15 @@ bool Parser::checkLabelValid(const vector <Token> &tokens) {
       // Verifies if colon has a symbol defining a label before
       if (token_indx <= 0 ||
           tokens.at(token_indx - 1).type != TokenType::SYMBOL) {
-            cout << "[SINTATIC ERR] Colon is not accompanied by a label!" << endl;
+            cout << "[SINTATIC ERR | Line " << line << "] Colon is not accompanied by a label!" << endl;
             return false;
       }
     }
   }
   // Only valid if there is one or none labels
   bool result = num_labels < 1;
-  if (!result)
-    cout << "[SINTATIC ERR] Expression has more than one label!";
+  if (num_labels > 1)
+    cout << "[SINTATIC ERR | Line " << line << "] Expression has more than one label!" << endl;
   return result;
 }
 
@@ -40,7 +40,7 @@ bool Parser::hasLabel(const vector <Token> &tokens) {
 
 // Get the main token of the expression. All expressions needs a directive
 // or an instruction
-Token Parser::getInstructionOrDirective(const vector<Token> &tokens) {
+Token Parser::getInstructionOrDirective(const vector<Token> &tokens, int line) {
   int num_dir_or_inst = 0;
   Token dir_or_inst;
   for (const Token &token : tokens) {
@@ -55,17 +55,17 @@ Token Parser::getInstructionOrDirective(const vector<Token> &tokens) {
     }
   }
   if (num_dir_or_inst > 1) {
-    cout << "[SINTATIC ERR] Line with more than one instruction or directive!" << endl;
+    cout << "[SINTATIC ERR | Line " << line << "] Line with more than one instruction or directive!" << endl;
   } else if (num_dir_or_inst <= 0) {
-    cout << "[SINTATIC ERR] Line does not have a directive or an instruction!" << endl;
+    cout << "[SINTATIC ERR | Line " << line << "] Line does not have a directive or an instruction!" << endl;
   }
   return dir_or_inst;
 }
 
 // Function to calculate the total size of the instruction or directive
-int Parser::calculateSizeOfExpression(const vector<Token> &tokens) {
+int Parser::calculateSizeOfExpression(const vector<Token> &tokens, int line) {
   int size = 0;
-  Token dir_inst_token = getInstructionOrDirective(tokens);
+  Token dir_inst_token = getInstructionOrDirective(tokens, line);
   // All instructions have a defined size
   if (dir_inst_token.type == TokenType::INSTRUCTION_TOKEN) {
     return instruction_table.get(dir_inst_token).size;
@@ -85,10 +85,10 @@ int Parser::calculateSizeOfExpression(const vector<Token> &tokens) {
   } else if (dir_inst_token.type == TokenType::SECTION) {
     return 0;
   } else if (directive_table.isPreProcessDirective(dir_inst_token)) {
-    cout << "[SEMANTIC ERR] Pre processement directive was not dealt correctly!" << endl;
+    cout << "[SEMANTIC ERR | Line " << line << "] Pre processement directive was not dealt correctly!" << endl;
     return 0;
   } else {
-    cout << "[SINTATIC ERR] Line does not have a directive or an instruction!" << endl;
+    cout << "[SINTATIC ERR | Line " << line << "] Line does not have a directive or an instruction!" << endl;
     return 0;
   }
 }

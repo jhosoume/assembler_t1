@@ -27,7 +27,7 @@ public:
   void exec();
   void writeObjectFile();
   void showObjectCode();
-  int getAddrValueFromOperand(vector <Token>);
+  int getAddrValueFromOperand(vector <Token>, int);
 
 private:
   Parser parser;

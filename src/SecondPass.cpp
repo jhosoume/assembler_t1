@@ -29,14 +29,19 @@ void SecondPass::exec() {
       operands = parser.groupOps(program.tokens.at(line));
       if (operands.size() > 0) {
         for (const auto &operand : operands) {
-          exec_code.push_back(getAddrValueFromOperand(operand));
+          exec_code.push_back(getAddrValueFromOperand(operand, line));
           cout << exec_code.back() << " ";
         }
       }
       // Check if has sum in line (Add in parse)
     } else if (tokens.at(0).tvalue == "CONST") {
       // If const, only add number to be in memory
-      exec_code.push_back(std::stoi( tokens.back().tvalue) );
+      // TODO needs to deal with hex
+      try {
+        exec_code.push_back(std::stoi( tokens.back().tvalue) );
+      } catch(const std::invalid_argument &e) {
+        cout << "[ERR | Line " << line << "] Could not convert " << tokens.back().tvalue << endl;
+      }
       cout << exec_code.back() << " ";
     } else if (tokens.at(0).tvalue == "SPACE") {
       // If space, add zeros to memory
@@ -67,11 +72,20 @@ void SecondPass::showObjectCode() {
     cout << endl;
 }
 
-int SecondPass::getAddrValueFromOperand(vector <Token> operand) {
-  int addr = symbol_table.getSymbolAddress(operand.at(0));
-  if (operand.size() > 1) {
-    // TODO pass conversion of string to number to the token class
-    addr += std::stoi(operand.back().tvalue);
+int SecondPass::getAddrValueFromOperand(vector <Token> operand, int line) {
+  try {
+    int addr = symbol_table.getSymbolAddress(operand.at(0));
+    if (operand.size() > 1) {
+      // TODO move conversion of string to number to the token class
+      // TODO check if hex
+      addr += std::stoi(operand.back().tvalue);
+    }
+    return addr;
+  } catch(const std::out_of_range &e) {
+    cout << "[SEMANTIC ERR | Line " << line << "] Operand " << operand.at(0).tvalue << " not found in the Symbols Table." << endl;
+    return -1;
+  } catch(const std::invalid_argument &e) {
+    cout << "[ERR | Line " << line << "] Could not convert " << operand.back().tvalue << endl;
+    return -1;
   }
-  return addr;
 }

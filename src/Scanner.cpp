@@ -67,7 +67,7 @@ TokenType Scanner::classifyToken(string token) {
       return TokenType::TEXT_SECTION;
   } else if (token.compare("MACRO") == 0) {
       return TokenType::MACRO;
-  } else if (token.compare("END") == 0) {
+  } else if ( (token.compare("END") == 0) || (token.compare("ENDMACRO") == 0) ) {
       return TokenType::ENDMACRO;
   } else if (token.compare(",") == 0) {
       return TokenType::COMMA_ARG_SEPARATOR;
