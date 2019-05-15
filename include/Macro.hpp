@@ -21,10 +21,13 @@ public:
 
 class Macro {
 public:
+  Macro();
   Macro(string);
 
   int getNumOperands();
   void addOperand(string);
+  int operandIndx(string);
+  int operandIndx(Token);
   void addOperandPosition(string, int, int);
   void addMacroLines(vector<Token>);
   vector < vector <Token> > macroWithSubstitions(vector <Token>);

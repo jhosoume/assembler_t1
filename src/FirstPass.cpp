@@ -1,7 +1,7 @@
 #include "FirstPass.hpp"
 
 FirstPass::FirstPass(const Parser &parser, const Program &prog)
-  : parser{parser}, program{prog}, text_section{false}, data_section{false}
+  : parser{parser}, program{prog}
   {}
 
 SymbolTable FirstPass::exec() {

@@ -1,4 +1,5 @@
 #include "Macro.hpp"
+Macro::Macro() {}
 
 Macro::Macro(string name)
   : name{name} {}
@@ -9,6 +10,20 @@ int Macro::getNumOperands() {
 
 void Macro::addOperand(string name) {
   operands_names.push_back(name);
+}
+
+int Macro::operandIndx(Token tok) {
+  return operandIndx(tok.tvalue);
+}
+
+int Macro::operandIndx(string op_name) {
+  int indx = 0;
+  for (indx = 0; indx < operands_names.size(); ++indx) {
+    if (op_name == operands_names.at(indx)) {
+      return indx;
+    }
+  }
+  return indx;
 }
 
 void Macro::addOperandPosition(string name, int line, int indx) {

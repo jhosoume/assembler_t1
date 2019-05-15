@@ -1,5 +1,5 @@
 SECTION TEXT
-	COPY ZERO, One ; erro const in copy
+	COPY ZERO, One
 	COPY ONE, OLD
 	INPUT LIMIT
 	OUTPUT OLD

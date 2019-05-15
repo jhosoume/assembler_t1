@@ -1,5 +1,5 @@
-SECTION TEXT
-	COPY ZERO, One ; erro const in copy
+	SECTION TEXT
+	COPY 1ZERO, OLDER ; token problematico
 	COPY ONE, OLD
 	INPUT LIMIT
 	OUTPUT OLD
@@ -16,8 +16,8 @@ FINAL:	OUTPUT LIMIT
 	STOP
 
 SECTION DATA
-ZERO:	CONST 0xA
-ONE:	CONST 0xA
+1ZERO:	CONST 0 ; Erro por label inválido (não pode iniciar com número) e causa ero de nao definicao 
+ONE:	CONST 1
 OLDER:	SPACE
 OLD:	SPACE
 NEW:	SPACE

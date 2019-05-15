@@ -30,6 +30,7 @@ int main(int argc, char **argv) {
                                       directive_table);
   // prog.showTokens();
   second_pass.exec();
+  second_pass.writeObjectFile();
   cout << "**********************" << endl;
   cout << "Finish Second Pass" << endl;
   cout << "**********************" << endl << endl;
