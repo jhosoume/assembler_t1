@@ -26,6 +26,7 @@ public:
   Parser(const InstructionTable &, const DirectiveTable &);
   bool isExpressionValid(const vector<Token> &, int = 0);
   Token getInstructionOrDirective(const vector<Token> &, int = 0);
+  Token getInstructionOrDirectiveWithOut(const vector<Token> &, int = 0);
   int calculateSizeOfExpression(const vector<Token> &, int = 0);
   bool hasLabel(const vector<Token> &);
   int hasSumInLine(const vector<Token> &);

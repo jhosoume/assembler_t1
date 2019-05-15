@@ -40,7 +40,7 @@ bool Parser::hasLabel(const vector <Token> &tokens) {
 
 // Get the main token of the expression. All expressions needs a directive
 // or an instruction
-Token Parser::getInstructionOrDirective(const vector<Token> &tokens, int line) {
+Token Parser::getInstructionOrDirectiveWithOut(const vector<Token> &tokens, int line) {
   int num_dir_or_inst = 0;
   Token dir_or_inst;
   for (const Token &token : tokens) {
@@ -58,6 +58,23 @@ Token Parser::getInstructionOrDirective(const vector<Token> &tokens, int line) {
     cout << "[SINTATIC ERR | Line " << line << "] Line with more than one instruction or directive!" << endl;
   } else if (num_dir_or_inst <= 0) {
     cout << "[SINTATIC ERR | Line " << line << "] Line does not have a directive or an instruction!" << endl;
+  }
+  return dir_or_inst;
+}
+
+Token Parser::getInstructionOrDirective(const vector<Token> &tokens, int line) {
+  int num_dir_or_inst = 0;
+  Token dir_or_inst;
+  for (const Token &token : tokens) {
+    if (token.type == TokenType::INSTRUCTION_TOKEN ||
+        token.type == TokenType::DIRECTIVE_TOKEN   ||
+        token.type == TokenType::SECTION           ||
+        token.type == TokenType::MACRO             ||
+        token.type == TokenType::ENDMACRO
+    ) {
+      ++num_dir_or_inst;
+      dir_or_inst = token;
+    }
   }
   return dir_or_inst;
 }

@@ -1,7 +1,7 @@
 #include "Program.hpp"
 
 Program::Program(File input_file)
-  : num_lines{0}, file{input_file}, total_size{0}
+  : num_lines{0}, file{input_file}, total_size{0}, data_section{-1}, text_section{-1}
   {}
 
 void Program::showTokenswithType() {

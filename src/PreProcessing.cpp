@@ -85,7 +85,7 @@ void PreProcessor::exec() {
   // Macro is dealt last, because if the macro contains an EQU or IF it is already resolved
   for (unsigned int line = 0; line < program.tokens.size(); ++line) {
     line = substMacro(line);
-    main_token = parser.getInstructionOrDirective(program.tokens.at(line), line);
+    main_token = parser.getInstructionOrDirectiveWithOut(program.tokens.at(line), line);
     if (main_token.tvalue == "MACRO") {
       dealingWithMacro(line);
       --line;
@@ -204,10 +204,11 @@ int PreProcessor::substMacro(int line) {
   Token tok;
   vector <Token> parameters;
   vector <Token> macro_line;
-  Macro myMacro;
+  Macro subst_macro;
+  int operand_indx;
   if (macro_table.isMacroDefined(program.tokens.at(line).front())) {
     subst = true;
-    myMacro = macro_table.get(program.tokens.at(line).front().tvalue);
+    subst_macro = macro_table.get(program.tokens.at(line).front().tvalue);
     for (unsigned int indx = 1; indx < program.tokens.at(line).size(); ++indx) {
       tok = program.tokens.at(line).at(indx);
       if (tok.type == TokenType::SYMBOL) {
@@ -216,15 +217,22 @@ int PreProcessor::substMacro(int line) {
     }
   }
   if (subst) {
-    if (parameters.size() != myMacro.getNumOperands()) {
+    if (parameters.size() != subst_macro.getNumOperands()) {
       cout << "[SYNTAX ERR] Line: " << line << " | Invalid Number of Parameters. "
-      << "Expected "<< myMacro.getNumOperands() << ", received " << parameters.size() << endl;
+      << "Expected "<< subst_macro.getNumOperands() << ", received " << parameters.size() << endl;
     }
-    for (int indx = 0; indx < myMacro.macro_definition.size(); ++indx) {
-      macro_line = myMacro.macro_definition.at(indx);
+    for (int indx = 0; indx < subst_macro.macro_definition.size(); ++indx) {
+      macro_line = subst_macro.macro_definition.at(indx);
       for (int token_indx = 0; token_indx < macro_line.size(); ++token_indx) {
-        // if (std::find(parameters.begin(), parameters.end(), macro_line.at(token_indx).tvalue) != 0) {
-        // }
+        if (std::find(subst_macro.operands_names.begin(), subst_macro.operands_names.end(),
+            macro_line.at(token_indx).tvalue) != subst_macro.operands_names.end()) {
+          operand_indx = subst_macro.operandIndx(macro_line.at(token_indx));
+          if (operand_indx < parameters.size()) {
+            macro_line.at(token_indx) = parameters.at(operand_indx);
+          } else {
+            cout << "[SYNTAX ERR] Line: " << line << " | Specified less parameters than necessary for macro." << endl;
+          }
+        }
       }
       program.tokens.insert(program.tokens.begin() + line + 1 + indx, macro_line);
     }
