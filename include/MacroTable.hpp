@@ -15,6 +15,10 @@ using ::std::endl;
 class MacroTable {
 public:
   void printMacros();
+
+  bool isMacroDefined(const Token &);
+  bool isMacroDefined(const string &);
+
   Macro get(const string &);
   void insert(string, Macro);
 

@@ -5,8 +5,8 @@ Parser::Parser(const InstructionTable &inst_t, const DirectiveTable &dir_t)
 {}
 
 // Make sintatic analysis of a line of tokens (Expression)
-bool Parser::isExpressionValid(const vector<Token> &tokens) {
-  return checkLabelValid(tokens);
+bool Parser::isExpressionValid(const vector<Token> &tokens, int line) {
+  return checkLabelValid(tokens, line);
 }
 
 bool Parser::checkLabelValid(const vector <Token> &tokens, int line) {
@@ -24,8 +24,8 @@ bool Parser::checkLabelValid(const vector <Token> &tokens, int line) {
   }
   // Only valid if there is one or none labels
   bool result = num_labels < 1;
-  if (!result)
-    cout << "[SINTATIC ERR | Line " << line << "] Expression has more than one label!";
+  if (num_labels > 1)
+    cout << "[SINTATIC ERR | Line " << line << "] Expression has more than one label!" << endl;
   return result;
 }
 

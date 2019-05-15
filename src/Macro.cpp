@@ -1,4 +1,5 @@
 #include "Macro.hpp"
+Macro::Macro() {}
 
 Macro::Macro(string name)
   : name{name} {}
@@ -11,6 +12,20 @@ void Macro::addOperand(string name) {
   operands_names.push_back(name);
 }
 
+int Macro::operandIndx(Token tok) {
+  return operandIndx(tok.tvalue);
+}
+
+int Macro::operandIndx(string op_name) {
+  int indx = 0;
+  for (indx = 0; indx < operands_names.size(); ++indx) {
+    if (op_name == operands_names.at(indx)) {
+      return indx;
+    }
+  }
+  return indx;
+}
+
 void Macro::addOperandPosition(string name, int line, int indx) {
   Position macro_position;
   macro_position.line = line; macro_position.indx = indx;
@@ -21,7 +36,6 @@ void Macro::addMacroLines(vector<Token> line_tokens) {
   macro_definition.push_back(line_tokens);
 }
 
-vector <Token> Macro::macroLineWithSubstitions(vector <Token> line_tokens) {
+vector < vector <Token> > Macro::macroWithSubstitions(vector <Token> line_tokens) {
   //TODO
-  return line_tokens;
 }

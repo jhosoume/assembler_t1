@@ -23,6 +23,7 @@ void PreProcessor::exec() {
   // Used for verification if label is in a line before
   bool needs_concate = false;
   Token main_token;
+
   // Pre process each line individually
   while(std::getline(ifs, line)) {
     // Call function to remove all comentaries (all chars after ;)
@@ -59,6 +60,7 @@ void PreProcessor::exec() {
     throw std::runtime_error("[ERR] Program was not read correctly!");
   }
   for (unsigned int line = 0; line < program.tokens.size(); ++line) {
+    parser.isExpressionValid(program.tokens.at(line), line);
     // Add label to equ_table
     main_token = parser.getInstructionOrDirective(program.tokens.at(line), line);
     substEqu(line);
@@ -72,7 +74,7 @@ void PreProcessor::exec() {
         if (std::stoi(program.tokens.at(line).back().tvalue) == 0) {
           program.tokens.erase(program.tokens.begin() + line);
           program.tokens.erase(program.tokens.begin() + line);
-          line -= 2;
+          --line;
         } else { // If the argument is not 0: erase this line
           program.tokens.erase(program.tokens.begin() + line);
           --line;
@@ -80,6 +82,16 @@ void PreProcessor::exec() {
       }
     }
   }
+  // Macro is dealt last, because if the macro contains an EQU or IF it is already resolved
+  for (unsigned int line = 0; line < program.tokens.size(); ++line) {
+    line = substMacro(line);
+    main_token = parser.getInstructionOrDirective(program.tokens.at(line), line);
+    if (main_token.tvalue == "MACRO") {
+      dealingWithMacro(line);
+      --line;
+    }
+  }
+  macro_table.printMacros();
 }
 
 // Creates separation of special characters from the rest of tokens to
@@ -135,4 +147,89 @@ void PreProcessor::substEqu(int line) {
       program.tokens.at(line).at(indx) = equ_table.getEquToken(program.tokens.at(line).at(indx));
     }
   }
+}
+
+void PreProcessor::dealingWithMacro(int line) {
+  Token main_token;
+  bool found_end = false;
+  string macro_name;
+  int num_operands = 0;
+  // Check if macro name is beign defined
+  if (parser.hasLabel(program.tokens.at(line))) {
+    // Check if the macro is being redefined
+    if (macro_table.isMacroDefined(program.tokens.at(line).front())) {
+      cout << "[SEMANTIC ERR] Line: " << line << " | Macro label already in use." << endl;
+    } else {
+      macro_name = program.tokens.at(line).front().tvalue;
+      Macro macro = Macro(macro_name);
+      // Body of the macro must be at the next line
+      if ((line + 1) == program.tokens.size()) {
+        cout << "[SYNTAX ERR] Line: " << line << " | Macro being defined in the last line." << endl;
+      }
+      // Get all operands
+      for (const Token &token : program.tokens.at(line)) {
+        if (token.type == TokenType::MACRO_PARAMETER) {
+          ++num_operands;
+          macro.addOperand(token.tvalue);
+        }
+      }
+      // For each line until the end, increment
+      for (unsigned int macro_line = (line + 1); macro_line < program.tokens.size(); ++macro_line) {
+        main_token = parser.getInstructionOrDirective(program.tokens.at(macro_line), macro_line);
+        if (main_token.type == TokenType::ENDMACRO) {
+          found_end = true;
+          program.tokens.erase(program.tokens.begin() + macro_line);
+          break;
+        }
+        macro.macro_definition.push_back(program.tokens.at(macro_line));
+        program.tokens.erase(program.tokens.begin() + macro_line);
+        --macro_line;
+      }
+      if (!found_end) {
+        cout << "[SYNTATIC ERROR] Macro does not have an end!" << endl;
+      }
+      macro_table.insert(macro_name, macro);
+    }
+  } else {
+    cout << "[SYNTAX ERR] Line: " << line <<" | Missing label." << endl;
+  }
+  program.tokens.erase(program.tokens.begin() + line);
+}
+
+int PreProcessor::substMacro(int line) {
+  // Redefines symbol acording to MACRO
+  std::vector<int>::iterator it;
+  vector <vector <Token>> macro_body;
+  bool subst = false;
+  Token tok;
+  vector <Token> parameters;
+  vector <Token> macro_line;
+  Macro myMacro;
+  if (macro_table.isMacroDefined(program.tokens.at(line).front())) {
+    subst = true;
+    myMacro = macro_table.get(program.tokens.at(line).front().tvalue);
+    for (unsigned int indx = 1; indx < program.tokens.at(line).size(); ++indx) {
+      tok = program.tokens.at(line).at(indx);
+      if (tok.type == TokenType::SYMBOL) {
+        parameters.push_back(tok);
+      }
+    }
+  }
+  if (subst) {
+    if (parameters.size() != myMacro.getNumOperands()) {
+      cout << "[SYNTAX ERR] Line: " << line << " | Invalid Number of Parameters. "
+      << "Expected "<< myMacro.getNumOperands() << ", received " << parameters.size() << endl;
+    }
+    for (int indx = 0; indx < myMacro.macro_definition.size(); ++indx) {
+      macro_line = myMacro.macro_definition.at(indx);
+      for (int token_indx = 0; token_indx < macro_line.size(); ++token_indx) {
+        // if (std::find(parameters.begin(), parameters.end(), macro_line.at(token_indx).tvalue) != 0) {
+        // }
+      }
+      program.tokens.insert(program.tokens.begin() + line + 1 + indx, macro_line);
+    }
+    program.tokens.erase(program.tokens.begin() + line);
+    --line;
+  }
+  return line;
 }
