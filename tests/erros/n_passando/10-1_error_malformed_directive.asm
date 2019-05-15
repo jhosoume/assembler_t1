@@ -1,5 +1,5 @@
 SECTION TEXT
-	COPY ZERO, One ; erro const in copy
+	COPY ZERO, OLDER ; zero nao definido
 	COPY ONE, OLD
 	INPUT LIMIT
 	OUTPUT OLD
@@ -14,10 +14,9 @@ FRONT:	LOAD OLDER
 	JMP FRONT
 FINAL:	OUTPUT LIMIT
 	STOP
-
 SECTION DATA
-ZERO:	CONST 0xA
-ONE:	CONST 0xA
+ZERO:	CONST ; Erro por uso indevido da diretiva (CONST necessita de um operando)
+ONE:	CONST 1
 OLDER:	SPACE
 OLD:	SPACE
 NEW:	SPACE
