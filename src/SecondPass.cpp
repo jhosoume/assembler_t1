@@ -62,6 +62,9 @@ void SecondPass::exec() {
 void SecondPass::writeObjectFile() {
   std::ofstream object_file;
   object_file.open(program.file.name() + ".obj");
+  for (auto code : exec_code) {
+    object_file << code << " ";
+  }
   object_file.close();
 }
 
