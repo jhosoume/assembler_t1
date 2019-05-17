@@ -38,6 +38,8 @@ public:
   int substMacro(int);
 
 private:
+  bool text_mode = false;
+  bool data_mode = false;
   Scanner scanner;
   Parser parser;
   Program &program;

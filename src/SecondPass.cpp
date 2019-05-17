@@ -22,6 +22,7 @@ void SecondPass::exec() {
       // If has label, put iterator after label
       tokens.assign(tokens.begin() + 2, tokens.end());
     }
+    parser.checkDerivation(tokens, line);
     if (tokens.at(0).type == TokenType::INSTRUCTION_TOKEN) {
       // If instruction, needs to add opcode then deal with operands
       exec_code.push_back(instruction_table.get(tokens.at(0)).op_code);
@@ -38,7 +39,13 @@ void SecondPass::exec() {
       // If const, only add number to be in memory
       // TODO needs to deal with hex
       try {
-        exec_code.push_back(std::stoi( tokens.back().tvalue) );
+        if (tokens.back().type == TokenType::NUMBER_DECIMAL) {
+          exec_code.push_back(std::stoi( tokens.back().tvalue) );
+        } else if (tokens.back().type == TokenType::NUMBER_HEX) {
+          exec_code.push_back( std::stoi(tokens.back().tvalue, nullptr, 16) );
+        } else {
+          cout << "[ERR | Line " << line << "] Could not convert " << tokens.back().tvalue << endl;
+        }
       } catch(const std::invalid_argument &e) {
         cout << "[ERR | Line " << line << "] Could not convert " << tokens.back().tvalue << endl;
       }
