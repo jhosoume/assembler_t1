@@ -23,7 +23,7 @@ void SecondPass::exec() {
       tokens.assign(tokens.begin() + 2, tokens.end());
     }
     parser.checkDerivation(tokens, line);
-    if (tokens.at(0).type == TokenType::INSTRUCTION_TOKEN) {
+    if (tokens.front().type == TokenType::INSTRUCTION_TOKEN) {
       // If instruction, needs to add opcode then deal with operands
       exec_code.push_back(instruction_table.get(tokens.at(0)).op_code);
       cout << exec_code.back() << " ";
@@ -32,6 +32,17 @@ void SecondPass::exec() {
         for (const auto &operand : operands) {
           exec_code.push_back(getAddrValueFromOperand(operand, line));
           cout << exec_code.back() << " ";
+        }
+      }
+      if ((tokens.front().tvalue == "JMP") ||
+          (tokens.front().tvalue == "JMPN") ||
+          (tokens.front().tvalue == "JMPP") ||
+          (tokens.front().tvalue == "JMPZ")
+         ) {
+        // TODO Make a try excepetion in case not found in table
+        SymbolData data = symbol_table.getSymbolData(tokens.back().tvalue);
+        if (data.symbol_type != SymbolType::INSTRUCTION) {
+          cout << "[SEMANTIC ERR] Line: " << line << " | Jump to invalid location!" << endl;
         }
       }
       // Check if has sum in line (Add in parse)
@@ -88,7 +99,13 @@ int SecondPass::getAddrValueFromOperand(vector <Token> operand, int line) {
     if (operand.size() > 1) {
       // TODO move conversion of string to number to the token class
       // TODO check if hex
-      addr += std::stoi(operand.back().tvalue);
+      if (operand.back().type == TokenType::NUMBER_HEX) {
+        addr += std::stoi(operand.back().tvalue, nullptr, 16);
+      } else if (operand.back().type == TokenType::NUMBER_DECIMAL) {
+        addr += std::stoi(operand.back().tvalue);
+      } else {
+        addr += std::stoi(operand.back().tvalue);
+      }
     }
     return addr;
   } catch(const std::out_of_range &e) {

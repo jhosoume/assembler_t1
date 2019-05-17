@@ -1,7 +1,10 @@
 #include "FirstPass.hpp"
 
-FirstPass::FirstPass(const Parser &parser, const Program &prog)
-  : parser{parser}, program{prog}
+FirstPass::FirstPass(const Parser &parser,
+                     const Program &prog,
+                     const InstructionTable &inst_table,
+                     const DirectiveTable &dir_table)
+  : parser{parser}, program{prog}, instruction_table{inst_table}, directive_table{dir_table}
   {}
 
 SymbolTable FirstPass::exec() {
@@ -28,6 +31,11 @@ SymbolTable FirstPass::exec() {
         } else if (program.tokens.at(line).back().type == TokenType::NUMBER_HEX) {
           vec_size = std::stoi(program.tokens.at(line).back().tvalue, nullptr, 16);
         }
+      } else if (instruction_table.isInstruction(program.tokens.at(line).front().tvalue)) {
+        cout << "[SEMANTIC ERR] Line: " << line << " | Label redefining a instruction!" << endl;
+
+      } else if (directive_table.isDirective(program.tokens.at(line).front().tvalue)) {
+        cout << "[SEMANTIC ERR] Line: " << line << " | Label redefining a directive!" << endl;
       }
       symbol_table.addSymbol(program.tokens.at(line).front().tvalue, program_counter, s_type, value, vec_size);
     }

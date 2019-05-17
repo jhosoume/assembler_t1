@@ -26,6 +26,9 @@ public:
   int getSymbolAddress(const Token &);
   int getSymbolAddress(const string &);
 
+  SymbolData getSymbolData(const Token &);
+  SymbolData getSymbolData(const string &);
+
   void addSymbol(string, int, SymbolType, int, int);
   void addSymbol(string, int);
   void addSymbol(Token, int);

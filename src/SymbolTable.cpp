@@ -16,6 +16,14 @@ int SymbolTable::getSymbolAddress(const string &symbol) {
   return definitions.at(symbol).address;
 }
 
+SymbolData SymbolTable::getSymbolData(const Token &symbol) {
+  return getSymbolAddress(symbol.tvalue);
+}
+
+SymbolData SymbolTable::getSymbolData(const string &symbol) {
+  return definitions.at(symbol);
+}
+
 void SymbolTable::addSymbol(string symbol, int addr, SymbolType s_type, int value, int vec_size) {
   SymbolData s_data = SymbolData(addr, value, s_type, vec_size);
   if ( isSymbolDefined(symbol) ) {
