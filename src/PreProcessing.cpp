@@ -60,9 +60,24 @@ void PreProcessor::exec() {
     throw std::runtime_error("[ERR] Program was not read correctly!");
   }
   for (unsigned int line = 0; line < program.tokens.size(); ++line) {
+    for (const auto &tok : program.tokens.at(line)) {
+      if (tok.type == TokenType::INVALID) {
+        cout << "[LEXICAL ERR] Line: " << line << " | Token '" << tok.tvalue << "' is not valid." << endl;
+      }
+    }
     parser.isExpressionValid(program.tokens.at(line), line);
     // Add label to equ_table
     main_token = parser.getInstructionOrDirective(program.tokens.at(line), line);
+    if (main_token.type == TokenType::SECTION) {
+      if (program.tokens.at(line).back().type == TokenType::DATA_SECTION) {
+        program.data_section = line;
+      } else if (program.tokens.at(line).back().type == TokenType::TEXT_SECTION) {
+        program.text_section = line;
+      } else {
+        cout << "[SYNTAX ERR] Line: " << line << " | Invalid Section Defined." << endl;
+      }
+    }
+
     substEqu(line);
     if (main_token.tvalue == "EQU") {
       dealingWithEqu(line);
@@ -81,6 +96,12 @@ void PreProcessor::exec() {
         }
       }
     }
+  }
+  if (program.text_section < 0) {
+    cout << "[SEMANTIC ERR] Text section was not defined." << endl;
+  } else if ((program.data_section != -1) && (program.data_section <= program.text_section)) {
+    cout << "[SEMANTIC ERR] Data section (Line: " << program.data_section
+      << ") is specified before text section (Line: " << program.text_section << ")." << endl;
   }
   // Macro is dealt last, because if the macro contains an EQU or IF it is already resolved
   for (unsigned int line = 0; line < program.tokens.size(); ++line) {

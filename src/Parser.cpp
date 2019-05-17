@@ -9,6 +9,37 @@ bool Parser::isExpressionValid(const vector<Token> &tokens, int line) {
   return checkLabelValid(tokens, line);
 }
 
+bool Parser::checkDerivation(const vector<Token> &tokens, int line) {
+  Token main_tok;
+  vector<TokenType> types;
+  for (auto indx = 0; indx < tokens.size(); ++indx) {
+    types.push_back(tokens.at(indx).type);
+  }
+  if (tokens.front().type == TokenType::DIRECTIVE_TOKEN) {
+    for (const auto &signature : directive_table.get(tokens.front()).signatures) {
+      if (types == signature) {
+        return true;
+      }
+    }
+    // if (std::find(directive_table.get(tokens.front()).signatures.begin(),
+    //               directive_table.get(tokens.front()).signatures.end(),
+    //               types) != directive_table.get(tokens.front()).signatures.end()) {
+    //   return true;
+    // } else {
+    // }
+    cout << "[SYNTAX ERR] Line: " << line << " Directive with incorrect signature" << endl;
+
+  } else if (tokens.front().type == TokenType::INSTRUCTION_TOKEN) {
+    for (const auto &signature : instruction_table.get(tokens.front()).signatures) {
+      if (types == signature) {
+        return true;
+      }
+    }
+    cout << "[SYNTAX ERR] Line: " << line << " Instruction with incorrect signature or one token may be invalid" << endl;
+  }
+  return false;
+}
+
 bool Parser::checkLabelValid(const vector <Token> &tokens, int line) {
   int num_labels = 0;
   for (unsigned int token_indx = 0; token_indx < tokens.size(); ++token_indx) {
@@ -94,7 +125,7 @@ int Parser::calculateSizeOfExpression(const vector<Token> &tokens, int line) {
         if (tokens.back().type == TokenType::NUMBER_DECIMAL)
           return std::stoi(tokens.back().tvalue);
         else if (tokens.back().type == TokenType::NUMBER_HEX)
-          return std::stoi(tokens.back().tvalue);
+          return std::stoi(tokens.back().tvalue, nullptr, 16);
         else
           return 1;
     }
