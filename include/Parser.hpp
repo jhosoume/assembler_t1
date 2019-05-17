@@ -25,6 +25,7 @@ class Parser {
 public:
   Parser(const InstructionTable &, const DirectiveTable &);
   bool isExpressionValid(const vector<Token> &, int = 0);
+  bool checkDerivation(const vector<Token> &, int = 0);
   Token getInstructionOrDirective(const vector<Token> &, int = 0);
   Token getInstructionOrDirectiveWithOut(const vector<Token> &, int = 0);
   int calculateSizeOfExpression(const vector<Token> &, int = 0);
