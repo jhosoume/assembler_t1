@@ -7,7 +7,6 @@
 #include <algorithm>
 #include <cctype>
 
-
 #include "Token.hpp"
 
 using ::std::string;
@@ -17,19 +16,27 @@ using ::std::cout;
 using ::std::endl;
 using ::std::pair;
 
-enum class Section {
-  DATA,
-  TEXT,
-  PP_DIR // Pre processment directives
-}
+enum class SymbolType {
+  CONST,
+  SPACE,
+  DIRECTIVE,
+  INSTRUCTION,
+  ZERO_CONST
+};
 
 
 class SymbolData {
 public:
-  int address;
-  int value = 0;
-  Section section;
 
+  SymbolData(int);
+  SymbolData(int, SymbolType);
+  SymbolData(int, int, SymbolType);
+  SymbolData(int, int, SymbolType, int);
+
+  int address;
+  int value;
+  SymbolType symbol_type;
+  int vector_size;
 
 };
 
