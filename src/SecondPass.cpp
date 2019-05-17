@@ -40,9 +40,24 @@ void SecondPass::exec() {
           (tokens.front().tvalue == "JMPZ")
          ) {
         // TODO Make a try excepetion in case not found in table
-        SymbolData data = symbol_table.getSymbolData(tokens.back().tvalue);
-        if (data.symbol_type != SymbolType::INSTRUCTION) {
-          cout << "[SEMANTIC ERR] Line: " << line << " | Jump to invalid location!" << endl;
+        try {
+          SymbolData data = symbol_table.getSymbolData(tokens.back().tvalue);
+          if (data.symbol_type != SymbolType::INSTRUCTION) {
+            cout << "[SEMANTIC ERR] Line: " << line << " | Jump to invalid location!" << endl;
+          }
+        } catch(const std::out_of_range &e) {
+          cout << "[SEMANTIC ERR | Line: " << line << "] Symbol '" << tokens.back().tvalue
+            << "' could not be found in the Symbol Table" << endl;
+        }
+      } else if (tokens.front().tvalue == "DIV") {
+        try {
+          SymbolData data = symbol_table.getSymbolData(tokens.back().tvalue);
+          if (data.value == 0) {
+            cout << "[SEMANTIC ERR] Line: " << line << " | Division by zero!" << endl;
+          }
+        } catch(const std::out_of_range &e) {
+          cout << "[SEMANTIC ERR | Line: " << line << "] Symbol '" << tokens.back().tvalue
+            << "' could not be found in the Symbol Table" << endl;
         }
       }
       // Check if has sum in line (Add in parse)
