@@ -7,7 +7,7 @@
 #include <algorithm>
 #include <cctype>
 
-
+#include "SymbolData.hpp"
 #include "Token.hpp"
 
 using ::std::string;
@@ -25,13 +25,14 @@ public:
   int getSymbolAddress(const Token &);
   int getSymbolAddress(const string &);
 
+  void addSymbol(string, int, Token, int, int);
   void addSymbol(string, int);
   void addSymbol(Token, int);
 
   void listTable();
 
 private:
-  map<string, int> definitions;
+  map<string, SymbolData> definitions;
 };
 
 #endif
