@@ -108,6 +108,9 @@ void PreProcessor::exec() {
     line = substMacro(line);
     main_token = parser.getInstructionOrDirectiveWithOut(program.tokens.at(line), line);
     if (main_token.tvalue == "MACRO") {
+      if (!parser.hasLabel(program.tokens.at(line))) {
+        cout << "[SYNTAX ERR] Line: " << line << " Macro definition does not have a label." << endl;
+      }
       dealingWithMacro(line);
       --line;
     }

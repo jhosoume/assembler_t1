@@ -35,7 +35,8 @@ bool Parser::checkDerivation(const vector<Token> &tokens, int line) {
         return true;
       }
     }
-    cout << "[SYNTAX ERR] Line: " << line << " Instruction with incorrect signature or one token may be invalid" << endl;
+    cout << "[SYNTAX ERR] Line: " << line << " Instruction '" << tokens.front().tvalue
+      << "' with incorrect arguments or one token may be invalid" << endl;
   }
   return false;
 }
@@ -48,7 +49,7 @@ bool Parser::checkLabelValid(const vector <Token> &tokens, int line) {
       // Verifies if colon has a symbol defining a label before
       if (token_indx <= 0 ||
           tokens.at(token_indx - 1).type != TokenType::SYMBOL) {
-            cout << "[SINTATIC ERR | Line " << line << "] Colon is not accompanied by a label!" << endl;
+            cout << "[SYNTAX ERR | Line " << line << "] Colon is not accompanied by a label!" << endl;
             return false;
       }
     }
@@ -56,7 +57,7 @@ bool Parser::checkLabelValid(const vector <Token> &tokens, int line) {
   // Only valid if there is one or none labels
   bool result = num_labels < 1;
   if (num_labels > 1)
-    cout << "[SINTATIC ERR | Line " << line << "] Expression has more than one label!" << endl;
+    cout << "[SYNTAX ERR | Line " << line << "] Expression has more than one label!" << endl;
   return result;
 }
 
@@ -86,9 +87,14 @@ Token Parser::getInstructionOrDirectiveWithOut(const vector<Token> &tokens, int 
     }
   }
   if (num_dir_or_inst > 1) {
-    cout << "[SINTATIC ERR | Line " << line << "] Line with more than one instruction or directive!" << endl;
+    cout << "[SYNTAX ERR | Line " << line << "] Line with more than one instruction or directive!" << endl;
   } else if (num_dir_or_inst <= 0) {
-    cout << "[SINTATIC ERR | Line " << line << "] Line does not have a directive or an instruction!" << endl;
+    cout << "[SYNTAX ERR | Line " << line << "] Line does not have a directive or an instruction!" << endl;
+    cout << "[ERR " << line <<  "] Tokens found: ";
+    for (const Token &token : tokens) {
+      cout << token.tvalue;
+    }
+    cout << endl;
   }
   return dir_or_inst;
 }
