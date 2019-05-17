@@ -19,9 +19,7 @@ using ::std::pair;
 enum class SymbolType {
   CONST,
   SPACE,
-  DIRECTIVE,
-  INSTRUCTION,
-  ZERO_CONST
+  INSTRUCTION
 };
 
 

@@ -8,6 +8,7 @@
 #include <algorithm>
 
 #include "TokenType.hpp"
+#include "SymbolData.hpp"
 
 using ::std::string;
 using ::std::vector;
@@ -32,5 +33,6 @@ File getFileNameFromArg(int, char **);
 bool is_hex_notation(const string &);
 bool is_integer_notation(const string &);
 string TokenTypeToString(const TokenType &);
+string SymbolTypeToString(const SymbolType &);
 
 #endif

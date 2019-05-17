@@ -9,6 +9,7 @@
 
 #include "SymbolData.hpp"
 #include "Token.hpp"
+#include "helper.hpp"
 
 using ::std::string;
 using ::std::map;
@@ -25,7 +26,7 @@ public:
   int getSymbolAddress(const Token &);
   int getSymbolAddress(const string &);
 
-  void addSymbol(string, int, Token, int, int);
+  void addSymbol(string, int, SymbolType, int, int);
   void addSymbol(string, int);
   void addSymbol(Token, int);
 

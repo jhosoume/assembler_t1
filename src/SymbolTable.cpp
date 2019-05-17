@@ -16,8 +16,8 @@ int SymbolTable::getSymbolAddress(const string &symbol) {
   return definitions.at(symbol).address;
 }
 
-void SymbolTable::addSymbol(string symbol, int addr, Token main_token, int value, int vec_size) {
-  SymbolData s_data = SymbolData(addr);
+void SymbolTable::addSymbol(string symbol, int addr, SymbolType s_type, int value, int vec_size) {
+  SymbolData s_data = SymbolData(addr, value, s_type, vec_size);
   if ( isSymbolDefined(symbol) ) {
     cout << "[ERR] Symbol is being redefined!" << endl;
   }
@@ -29,22 +29,15 @@ void SymbolTable::addSymbol(Token token, int addr) {
 }
 
 void SymbolTable::addSymbol(string symbol, int addr) {
-  addSymbol(symbol, addr, Token(), 0, 0);
+  addSymbol(symbol, addr, SymbolType::INSTRUCTION, 0, 0);
 }
-
-
-
-
-
-
-
-
-
 
 void SymbolTable::listTable() {
   cout << "Listing Symbol Table" << endl;
   cout << "LABEL: Address" << endl;
   for (const auto &pair_symbol : definitions) {
-    cout << pair_symbol.first << ": " << pair_symbol.second.address << endl;
+    cout << pair_symbol.first << ": " << pair_symbol.second.address << " "
+      << SymbolTypeToString(pair_symbol.second.symbol_type) << " " << pair_symbol.second.value
+      << " "<< pair_symbol.second.vector_size << endl;
   }
 }

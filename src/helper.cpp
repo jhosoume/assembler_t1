@@ -152,3 +152,20 @@ string TokenTypeToString(const TokenType &type) {
       break;
   }
 }
+
+string SymbolTypeToString(const SymbolType &type) {
+  switch(type) {
+    case SymbolType::CONST:
+      return "CONST";
+      break;
+    case SymbolType::SPACE:
+      return "SPACE";
+      break;
+    case SymbolType::INSTRUCTION:
+      return "INSTRUCTION";
+      break;
+    default:
+      return "UNKNOWN_TYPE";
+      break;
+  }
+}
