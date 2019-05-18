@@ -123,3 +123,11 @@ bool DirectiveTable::isPreProcessDirective(const string &token_value) {
 bool DirectiveTable::isPreProcessDirective(const Token &token) {
   return (preprocess_dirs.count(token.tvalue) >= 0);
 }
+
+bool DirectiveTable::isDirective(const Token &token) {
+  return isDirective(token.tvalue);
+}
+
+bool DirectiveTable::isDirective(const string &token_value) {
+  return (directives.count(token_value) != 0);
+}

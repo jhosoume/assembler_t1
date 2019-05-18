@@ -8,6 +8,7 @@
 
 #include "Parser.hpp"
 #include "Program.hpp"
+#include "SymbolData.hpp"
 #include "SymbolTable.hpp"
 #include "Token.hpp"
 

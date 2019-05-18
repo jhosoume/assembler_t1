@@ -202,3 +202,11 @@ Instruction InstructionTable::get(const string &token_value) {
 Instruction InstructionTable::get(const Token &token) {
   return instructions.at(token.tvalue);
 }
+
+bool InstructionTable::isInstruction(const Token &token) {
+  return isInstruction(token.tvalue);
+}
+
+bool InstructionTable::isInstruction(const string &token_value) {
+  return (instructions.count(token_value) != 0);
+}

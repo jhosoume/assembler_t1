@@ -18,7 +18,7 @@ int main(int argc, char **argv) {
   cout << "**********************" << endl << endl;
   // prog.showTokens();
   zero_run.writePreProcessedFile();
-  FirstPass first_pass = FirstPass(parser, prog);
+  FirstPass first_pass = FirstPass(parser, prog, instruction_table, directive_table);
   cout << "**********************" << endl;
   cout << "Finish First Pass" << endl;
   cout << "**********************" << endl << endl;

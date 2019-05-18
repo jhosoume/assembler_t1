@@ -62,7 +62,7 @@ void PreProcessor::exec() {
   for (unsigned int line = 0; line < program.tokens.size(); ++line) {
     for (const auto &tok : program.tokens.at(line)) {
       if (tok.type == TokenType::INVALID) {
-        cout << "[LEXICAL ERR] Line: " << line << " | Token '" << tok.tvalue << "' is not valid." << endl;
+        cout << "[LEXICAL ERR] Line: " << line + 1 << " | Token '" << tok.tvalue << "' is not valid." << endl;
       }
     }
     parser.isExpressionValid(program.tokens.at(line), line);
@@ -70,16 +70,29 @@ void PreProcessor::exec() {
     main_token = parser.getInstructionOrDirective(program.tokens.at(line), line);
     if (main_token.type == TokenType::SECTION) {
       if (program.tokens.at(line).back().type == TokenType::DATA_SECTION) {
+        text_mode = false;
+        data_mode = true;
+        if (program.data_section != -1) {
+          cout << "[SEMANTIC ERR] Line: " << line + 1 << " | Data section defined more than once." << endl;
+        }
         program.data_section = line;
       } else if (program.tokens.at(line).back().type == TokenType::TEXT_SECTION) {
+        data_mode = false;
+        text_mode = true;
+        if (program.text_section != -1) {
+          cout << "[SEMANTIC ERR] Line: " << line + 1 << " | Text section defined more than once." << endl;
+        }
         program.text_section = line;
       } else {
-        cout << "[SYNTAX ERR] Line: " << line << " | Invalid Section Defined." << endl;
+        cout << "[SYNTAX ERR] Line: " << line + 1 << " | Invalid Section Defined." << endl;
       }
     }
 
     substEqu(line);
     if (main_token.tvalue == "EQU") {
+      if (text_mode || data_mode) {
+        cout << "[SEMANTIC ERR] Line: " << line + 1 << " | Equ definition is not outside sections;" << endl;
+      }
       dealingWithEqu(line);
       --line;
     } else if (main_token.tvalue == "IF") {
@@ -100,16 +113,35 @@ void PreProcessor::exec() {
   if (program.text_section < 0) {
     cout << "[SEMANTIC ERR] Text section was not defined." << endl;
   } else if ((program.data_section != -1) && (program.data_section <= program.text_section)) {
-    cout << "[SEMANTIC ERR] Data section (Line: " << program.data_section
-      << ") is specified before text section (Line: " << program.text_section << ")." << endl;
+    cout << "[SEMANTIC ERR] Data section (Line: " << program.data_section + 1
+      << ") is specified before text section (Line: " << program.text_section + 1 << ")." << endl;
   }
   // Macro is dealt last, because if the macro contains an EQU or IF it is already resolved
   for (unsigned int line = 0; line < program.tokens.size(); ++line) {
     line = substMacro(line);
     main_token = parser.getInstructionOrDirectiveWithOut(program.tokens.at(line), line);
-    if (main_token.tvalue == "MACRO") {
+    if (main_token.type == TokenType::SECTION) {
+      if (program.tokens.at(line).back().type == TokenType::DATA_SECTION) {
+        text_mode = false;
+        data_mode = true;
+      } else if (program.tokens.at(line).back().type == TokenType::TEXT_SECTION) {
+        data_mode = false;
+        text_mode = true;
+      }
+    } else if (main_token.type == TokenType::INSTRUCTION_TOKEN) {
+      if (data_mode || !text_mode) {
+        cout << "[SEMANTIC ERR] Line: " << line + 1 << " | Instruction outside text section;" << endl;
+      }
+    } else if (main_token.type == TokenType::DIRECTIVE_TOKEN) {
+      if (!data_mode || text_mode) {
+        cout << "[SEMANTIC ERR] Line: " << line + 1 << " | Directive outside data section;" << endl;
+      }
+    } else if (main_token.tvalue == "MACRO") {
+      if (text_mode || data_mode) {
+        cout << "[SEMANTIC ERR] Line: " << line + 1 << " | Macro definition is not outside sections;" << endl;
+      }
       if (!parser.hasLabel(program.tokens.at(line))) {
-        cout << "[SYNTAX ERR] Line: " << line << " Macro definition does not have a label." << endl;
+        cout << "[SYNTAX ERR] Line: " << line + 1 << " | Macro definition does not have a label." << endl;
       }
       dealingWithMacro(line);
       --line;
@@ -154,12 +186,12 @@ void PreProcessor::writePreProcessedFile() {
 void PreProcessor::dealingWithEqu(int line) {
   if (parser.hasLabel(program.tokens.at(line))) {
     if (equ_table.isEquDefined(program.tokens.at(line).front())) {
-      cout << "[SEMANTIC ERR] Line: " << line << " | Equ label already in use." << endl;
+      cout << "[SEMANTIC ERR] Line: " << line + 1 << " | Equ label already in use." << endl;
     } else {
       equ_table.addEqu(program.tokens.at(line).front(), program.tokens.at(line).back());
     }
   } else {
-    cout << "[SYNTAX ERR] Line: " << line <<" | Missing label." << endl;
+    cout << "[SYNTAX ERR] Line: " << line + 1 <<" | Missing label." << endl;
   }
   program.tokens.erase(program.tokens.begin() + line);
 }
@@ -182,13 +214,13 @@ void PreProcessor::dealingWithMacro(int line) {
   if (parser.hasLabel(program.tokens.at(line))) {
     // Check if the macro is being redefined
     if (macro_table.isMacroDefined(program.tokens.at(line).front())) {
-      cout << "[SEMANTIC ERR] Line: " << line << " | Macro label already in use." << endl;
+      cout << "[SEMANTIC ERR] Line: " << line + 1 << " | Macro label already in use." << endl;
     } else {
       macro_name = program.tokens.at(line).front().tvalue;
       Macro macro = Macro(macro_name);
       // Body of the macro must be at the next line
       if ((line + 1) == program.tokens.size()) {
-        cout << "[SYNTAX ERR] Line: " << line << " | Macro being defined in the last line." << endl;
+        cout << "[SYNTAX ERR] Line: " << line + 1 << " | Macro being defined in the last line." << endl;
       }
       // Get all operands
       for (const Token &token : program.tokens.at(line)) {
@@ -215,7 +247,7 @@ void PreProcessor::dealingWithMacro(int line) {
       macro_table.insert(macro_name, macro);
     }
   } else {
-    cout << "[SYNTAX ERR] Line: " << line <<" | Missing label." << endl;
+    cout << "[SYNTAX ERR] Line: " << line + 1 <<" | Missing label." << endl;
   }
   program.tokens.erase(program.tokens.begin() + line);
 }
@@ -242,7 +274,7 @@ int PreProcessor::substMacro(int line) {
   }
   if (subst) {
     if (parameters.size() != subst_macro.getNumOperands()) {
-      cout << "[SYNTAX ERR] Line: " << line << " | Invalid Number of Parameters. "
+      cout << "[SYNTAX ERR] Line: " << line + 1 << " | Invalid Number of Parameters. "
       << "Expected "<< subst_macro.getNumOperands() << ", received " << parameters.size() << endl;
     }
     for (int indx = 0; indx < subst_macro.macro_definition.size(); ++indx) {
@@ -254,7 +286,7 @@ int PreProcessor::substMacro(int line) {
           if (operand_indx < parameters.size()) {
             macro_line.at(token_indx) = parameters.at(operand_indx);
           } else {
-            cout << "[SYNTAX ERR] Line: " << line << " | Specified less parameters than necessary for macro." << endl;
+            cout << "[SYNTAX ERR] Line: " << line + 1 << " | Specified less parameters than necessary for macro." << endl;
           }
         }
       }

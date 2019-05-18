@@ -20,6 +20,8 @@ public:
   void printInstructions();
   Instruction get(const string &);
   Instruction get(const Token &);
+  bool isInstruction(const string &);
+  bool isInstruction(const Token &);
 
   map<string, Instruction> instructions;
 

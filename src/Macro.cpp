@@ -35,7 +35,3 @@ void Macro::addOperandPosition(string name, int line, int indx) {
 void Macro::addMacroLines(vector<Token> line_tokens) {
   macro_definition.push_back(line_tokens);
 }
-
-vector < vector <Token> > Macro::macroWithSubstitions(vector <Token> line_tokens) {
-  //TODO
-}
