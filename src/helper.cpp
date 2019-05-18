@@ -78,10 +78,10 @@ vector<string> split(const string& str, const string& delim) {
 // Verify if the string is a valid hex (positive or negative)
 bool is_hex_notation(const string &s) {
   return ((s.size() > 2 &&
-          s.compare(0, 2, "0x") == 0 &&
+          s.compare(0, 2, "0X") == 0 &&
           s.find_first_not_of("0123456789abcdefABCDEF", 2) == string::npos)
       ||(s.size() > 3 &&
-        s.compare(0, 3, "-0x") == 0 &&
+        s.compare(0, 3, "-0X") == 0 &&
         s.find_first_not_of("0123456789abcdefABCDEF", 3) == string::npos));
 }
 

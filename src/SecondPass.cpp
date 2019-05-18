@@ -111,6 +111,7 @@ void SecondPass::showObjectCode() {
 int SecondPass::getAddrValueFromOperand(vector <Token> operand, int line) {
   try {
     int addr = symbol_table.getSymbolAddress(operand.at(0));
+    SymbolData data = symbol_table.getSymbolData(operand.front());
     if (operand.size() > 1) {
       // TODO move conversion of string to number to the token class
       // TODO check if hex
@@ -121,6 +122,8 @@ int SecondPass::getAddrValueFromOperand(vector <Token> operand, int line) {
       } else {
         addr += std::stoi(operand.back().tvalue);
       }
+
+
     }
     return addr;
   } catch(const std::out_of_range &e) {

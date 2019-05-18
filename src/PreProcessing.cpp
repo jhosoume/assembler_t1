@@ -70,8 +70,18 @@ void PreProcessor::exec() {
     main_token = parser.getInstructionOrDirective(program.tokens.at(line), line);
     if (main_token.type == TokenType::SECTION) {
       if (program.tokens.at(line).back().type == TokenType::DATA_SECTION) {
+        text_mode = false;
+        data_mode = true;
+        if (program.data_section != -1) {
+          cout << "[SEMANTIC ERR] Line: " << line << " | Data section defined more than once." << endl;
+        }
         program.data_section = line;
       } else if (program.tokens.at(line).back().type == TokenType::TEXT_SECTION) {
+        data_mode = false;
+        text_mode = true;
+        if (program.text_section != -1) {
+          cout << "[SEMANTIC ERR] Line: " << line << " | Text section defined more than once." << endl;
+        }
         program.text_section = line;
       } else {
         cout << "[SYNTAX ERR] Line: " << line << " | Invalid Section Defined." << endl;
@@ -80,6 +90,9 @@ void PreProcessor::exec() {
 
     substEqu(line);
     if (main_token.tvalue == "EQU") {
+      if (text_mode || data_mode) {
+        cout << "[SEMANTIC ERR] Line: " << line << " | Equ definition is not outside sections;" << endl;
+      }
       dealingWithEqu(line);
       --line;
     } else if (main_token.tvalue == "IF") {
@@ -107,9 +120,28 @@ void PreProcessor::exec() {
   for (unsigned int line = 0; line < program.tokens.size(); ++line) {
     line = substMacro(line);
     main_token = parser.getInstructionOrDirectiveWithOut(program.tokens.at(line), line);
-    if (main_token.tvalue == "MACRO") {
+    if (main_token.type == TokenType::SECTION) {
+      if (program.tokens.at(line).back().type == TokenType::DATA_SECTION) {
+        text_mode = false;
+        data_mode = true;
+      } else if (program.tokens.at(line).back().type == TokenType::TEXT_SECTION) {
+        data_mode = false;
+        text_mode = true;
+      }
+    } else if (main_token.type == TokenType::INSTRUCTION_TOKEN) {
+      if (data_mode || !text_mode) {
+        cout << "[SEMANTIC ERR] Line: " << line << " | Instruction outside text section;" << endl;
+      }
+    } else if (main_token.type == TokenType::DIRECTIVE_TOKEN) {
+      if (!data_mode || text_mode) {
+        cout << "[SEMANTIC ERR] Line: " << line << " | Directive outside data section;" << endl;
+      }
+    } else if (main_token.tvalue == "MACRO") {
+      if (text_mode || data_mode) {
+        cout << "[SEMANTIC ERR] Line: " << line << " | Macro definition is not outside sections;" << endl;
+      }
       if (!parser.hasLabel(program.tokens.at(line))) {
-        cout << "[SYNTAX ERR] Line: " << line << " Macro definition does not have a label." << endl;
+        cout << "[SYNTAX ERR] Line: " << line << " | Macro definition does not have a label." << endl;
       }
       dealingWithMacro(line);
       --line;
