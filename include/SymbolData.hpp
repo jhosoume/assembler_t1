@@ -34,7 +34,7 @@ public:
   int address;
   int value;
   SymbolType symbol_type;
-  int vector_size;
+  int offset;
 
 };
 

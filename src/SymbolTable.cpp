@@ -16,6 +16,14 @@ int SymbolTable::getSymbolAddress(const string &symbol) {
   return definitions.at(symbol).address;
 }
 
+int SymbolTable::getSymbolOffset(const Token &symbol) {
+  return getSymbolOffset(symbol.tvalue);
+}
+
+int SymbolTable::getSymbolOffset(const string &symbol) {
+  return definitions.at(symbol).offset;
+}
+
 SymbolData SymbolTable::getSymbolData(const Token &symbol) {
   return getSymbolAddress(symbol.tvalue);
 }
@@ -46,6 +54,6 @@ void SymbolTable::listTable() {
   for (const auto &pair_symbol : definitions) {
     cout << pair_symbol.first << ": " << pair_symbol.second.address << " "
       << SymbolTypeToString(pair_symbol.second.symbol_type) << " " << pair_symbol.second.value
-      << " "<< pair_symbol.second.vector_size << endl;
+      << " "<< pair_symbol.second.offset << endl;
   }
 }

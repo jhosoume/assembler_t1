@@ -111,21 +111,27 @@ void SecondPass::showObjectCode() {
 int SecondPass::getAddrValueFromOperand(vector <Token> operand, int line) {
   try {
     int addr = symbol_table.getSymbolAddress(operand.at(0));
-    SymbolData data = symbol_table.getSymbolData(operand.front());
+    int addition = 0;
+    int offset = symbol_table.getSymbolOffset(operand.at(0));
+    SymbolData data = symbol_table.getSymbolData(operand.at(0));
     if (operand.size() > 1) {
       // TODO move conversion of string to number to the token class
       // TODO check if hex
       if (operand.back().type == TokenType::NUMBER_HEX) {
-        addr += std::stoi(operand.back().tvalue, nullptr, 16);
+        addition = std::stoi(operand.back().tvalue, nullptr, 16);
       } else if (operand.back().type == TokenType::NUMBER_DECIMAL) {
-        addr += std::stoi(operand.back().tvalue);
+        addition = std::stoi(operand.back().tvalue);
       } else {
-        addr += std::stoi(operand.back().tvalue);
+        addition = std::stoi(operand.back().tvalue);
       }
 
+      if (addition > offset) {
+        cout << "[SEMANTIC ERR | Line " << line << "] Array operand (+ " << addition
+          << ") out of bounds (limit: " << offset << ")." << endl;
+      }
 
     }
-    return addr;
+    return addr + addition;
   } catch(const std::out_of_range &e) {
     cout << "[SEMANTIC ERR | Line " << line << "] Operand " << operand.at(0).tvalue << " not found in the Symbols Table." << endl;
     return -1;
