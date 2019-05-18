@@ -125,7 +125,7 @@ int SecondPass::getAddrValueFromOperand(vector <Token> operand, int line) {
         addition = std::stoi(operand.back().tvalue);
       }
 
-      if (addition > offset) {
+      if (addition >= offset) {
         cout << "[SEMANTIC ERR | Line " << line << "] Array operand (+ " << addition
           << ") out of bounds (limit: " << offset << ")." << endl;
       }

@@ -30,7 +30,6 @@ public:
   int operandIndx(Token);
   void addOperandPosition(string, int, int);
   void addMacroLines(vector<Token>);
-  vector < vector <Token> > macroWithSubstitions(vector <Token>);
   string name;
 
   vector <string> operands_names;
