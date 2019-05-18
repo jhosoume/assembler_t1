@@ -32,20 +32,20 @@ SymbolData SymbolTable::getSymbolData(const string &symbol) {
   return definitions.at(symbol);
 }
 
-void SymbolTable::addSymbol(string symbol, int addr, SymbolType s_type, int value, int vec_size) {
+void SymbolTable::addSymbol(int line, string symbol, int addr, SymbolType s_type, int value, int vec_size) {
   SymbolData s_data = SymbolData(addr, value, s_type, vec_size);
   if ( isSymbolDefined(symbol) ) {
-    cout << "[ERR] Symbol is being redefined!" << endl;
+    cout << "[SEMANTIC ERR] Symbol is being redefined!" << endl;
   }
   definitions.insert(pair <string, SymbolData> (symbol, s_data));
 }
 
-void SymbolTable::addSymbol(Token token, int addr) {
-  addSymbol(token.tvalue, addr);
+void SymbolTable::addSymbol(int line, Token token, int addr) {
+  addSymbol(line, token.tvalue, addr);
 }
 
-void SymbolTable::addSymbol(string symbol, int addr) {
-  addSymbol(symbol, addr, SymbolType::INSTRUCTION, 0, 0);
+void SymbolTable::addSymbol(int line, string symbol, int addr) {
+  addSymbol(line, symbol, addr, SymbolType::INSTRUCTION, 0, 0);
 }
 
 void SymbolTable::listTable() {

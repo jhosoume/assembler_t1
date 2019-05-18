@@ -33,9 +33,9 @@ public:
   SymbolData getSymbolData(const string &);
 
 
-  void addSymbol(string, int, SymbolType, int, int);
-  void addSymbol(string, int);
-  void addSymbol(Token, int);
+  void addSymbol(int, string, int, SymbolType, int, int);
+  void addSymbol(int, string, int);
+  void addSymbol(int, Token, int);
 
   void listTable();
 

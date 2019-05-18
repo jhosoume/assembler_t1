@@ -32,16 +32,16 @@ SymbolTable FirstPass::exec() {
           vec_size = std::stoi(program.tokens.at(line).back().tvalue, nullptr, 16);
         }
       } else if (instruction_table.isInstruction(program.tokens.at(line).front().tvalue)) {
-        cout << "[SEMANTIC ERR] Line: " << line << " | Label redefining a instruction!" << endl;
+        cout << "[SEMANTIC ERR] Line: " << line + 1 << " | Label redefining a instruction!" << endl;
 
       } else if (directive_table.isDirective(program.tokens.at(line).front().tvalue)) {
-        cout << "[SEMANTIC ERR] Line: " << line << " | Label redefining a directive!" << endl;
+        cout << "[SEMANTIC ERR] Line: " << line + 1 << " | Label redefining a directive!" << endl;
       }
-      symbol_table.addSymbol(program.tokens.at(line).front().tvalue, program_counter, s_type, value, vec_size);
+      symbol_table.addSymbol(line, program.tokens.at(line).front().tvalue, program_counter, s_type, value, vec_size);
     }
     program_counter += parser.calculateSizeOfExpression(program.tokens.at(line), line);
   }
-  symbol_table.listTable();
+  // symbol_table.listTable();
   program.total_size = program_counter;
   return symbol_table;
 }
